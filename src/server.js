@@ -7,7 +7,7 @@ require('dotenv').config({ path: path.join(__dirname, '../.env') });
 const { fetchLeaderboardData } = require('./fetchData');
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 const LEADERBOARD_PATH = path.join(__dirname, '../data/leaderboard.json');
 const HISTORY_PATH     = path.join(__dirname, '../data/history.json');
 
@@ -135,7 +135,7 @@ cron.schedule('30 3 * * *', async () => {
 });
 
 async function startServer() {
-  app.listen(PORT, () => {
+  app.listen(PORT, '0.0.0.0', () => {
     console.log(`[server] Op Board running at http://localhost:${PORT}`);
     console.log(`[server] Static files served from: ${path.join(__dirname, '../public')}`);
   });
