@@ -308,6 +308,37 @@ body {
   font-weight: 600;
 }
 
+/* Trend charts */
+.trend-charts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.trend-chart-wrap {
+  padding: 14px 18px 10px;
+  border-right: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.trend-chart-wrap:last-child { border-right: none; }
+
+.trend-chart-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-3);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
+}
+
+@media (max-width: 600px) {
+  .trend-charts { grid-template-columns: 1fr; }
+  .trend-chart-wrap { border-right: none; border-bottom: 1px solid var(--border); }
+  .trend-chart-wrap:last-child { border-bottom: none; }
+}
+
 /* Trend table */
 .trend-table {
   width: 100%;

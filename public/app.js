@@ -411,6 +411,66 @@ function formatDelta(delta, type) {
   return '';
 }
 
+function buildMissionsChart(daily) {
+  // daily is most-recent-first; reverse for left→right chronological
+  const days = [...daily].reverse();
+  const W = 400, H = 64, pad = 4;
+  const maxM = Math.max(...days.map(d => d.missionsCompleted), 1);
+  const barW = Math.max(6, Math.floor((W - pad * 2) / days.length) - 2);
+  const gap  = Math.floor((W - pad * 2 - barW * days.length) / Math.max(days.length - 1, 1));
+
+  const bars = days.map((d, i) => {
+    const bh  = Math.max(3, Math.round(((d.missionsCompleted / maxM) * (H - 18))));
+    const x   = pad + i * (barW + gap);
+    const y   = H - bh - 14;
+    const col = i === days.length - 1 ? 'var(--gold)' : 'var(--border-2)';
+    const lbl = d.missionsCompleted;
+    return `
+      <rect x="${x}" y="${y}" width="${barW}" height="${bh}" rx="2" fill="${col}" opacity="0.85"/>
+      <text x="${x + barW / 2}" y="${H - 2}" text-anchor="middle" font-size="9" fill="var(--text-3)">${d.date.slice(5)}</text>
+      ${i === days.length - 1 ? `<text x="${x + barW / 2}" y="${y - 3}" text-anchor="middle" font-size="10" fill="var(--gold)" font-weight="600">${lbl}</text>` : ''}
+    `;
+  }).join('');
+
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%" height="${H}" xmlns="http://www.w3.org/2000/svg" style="display:block;overflow:visible;">${bars}</svg>`;
+}
+
+function buildResChart(daily) {
+  const days = [...daily].reverse().filter(d => d.avgResolutionTimeMs);
+  if (days.length < 2) return '';
+  const W = 400, H = 56, pad = 8;
+  const vals = days.map(d => d.avgResolutionTimeMs);
+  const minV = Math.min(...vals), maxV = Math.max(...vals);
+  const range = maxV - minV || 1;
+  const stepX = (W - pad * 2) / Math.max(days.length - 1, 1);
+
+  const pts = days.map((d, i) => {
+    const x = pad + i * stepX;
+    const y = H - 14 - Math.round(((d.avgResolutionTimeMs - minV) / range) * (H - 22));
+    return { x, y, d };
+  });
+
+  const polyline = pts.map(p => `${p.x},${p.y}`).join(' ');
+  const area = `${pts[0].x},${H - 14} ` + pts.map(p => `${p.x},${p.y}`).join(' ') + ` ${pts[pts.length-1].x},${H - 14}`;
+
+  const dots = pts.map((p, i) => {
+    const isLast = i === pts.length - 1;
+    return `<circle cx="${p.x}" cy="${p.y}" r="${isLast ? 3.5 : 2}" fill="${isLast ? 'var(--gold)' : 'var(--text-3)'}"/>`;
+  }).join('');
+
+  const labels = days.map((d, i) => {
+    const p = pts[i];
+    return `<text x="${p.x}" y="${H - 2}" text-anchor="middle" font-size="9" fill="var(--text-3)">${d.date.slice(5)}</text>`;
+  }).join('');
+
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%" height="${H}" xmlns="http://www.w3.org/2000/svg" style="display:block;overflow:visible;">
+    <defs><linearGradient id="rg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="var(--gold)" stop-opacity="0.18"/><stop offset="100%" stop-color="var(--gold)" stop-opacity="0"/></linearGradient></defs>
+    <polygon points="${area}" fill="url(#rg)"/>
+    <polyline points="${polyline}" fill="none" stroke="var(--gold)" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" opacity="0.7"/>
+    ${dots}${labels}
+  </svg>`;
+}
+
 function renderTrends(agents, query) {
   const filtered = query
     ? agents.filter(a => a.name.toLowerCase().includes(query.toLowerCase()))
@@ -447,20 +507,35 @@ function renderTrends(agents, query) {
       ? Math.round(resEntries.reduce((s, d) => s + d.avgResolutionTimeMs, 0) / resEntries.length)
       : null;
 
+    const missionsChart = buildMissionsChart(agent.daily);
+    const resChart      = buildResChart(agent.daily);
+
     return `
       <div class="trend-card">
         <div class="trend-card-header">
-          <div class="trend-agent-name">${escapeHtml(agent.name)}</div>
-          <div class="trend-summary">
-            <span class="trend-summary-item">${agent.daysTracked} day${agent.daysTracked !== 1 ? 's' : ''}</span>
-            <span class="trend-summary-item">avg <strong>${avgMissions}</strong> missions/day</span>
-            ${avgRes ? `<span class="trend-summary-item">avg res <strong>${formatDuration(avgRes)}</strong></span>` : ''}
+          <div>
+            <div class="trend-agent-name">${escapeHtml(agent.name)}</div>
+            <div class="trend-summary">
+              <span class="trend-summary-item">${agent.daysTracked} day${agent.daysTracked !== 1 ? 's' : ''}</span>
+              <span class="trend-summary-item">avg <strong>${avgMissions}</strong> missions/day</span>
+              ${avgRes ? `<span class="trend-summary-item">avg res <strong>${formatDuration(avgRes)}</strong></span>` : ''}
+            </div>
           </div>
+        </div>
+        <div class="trend-charts">
+          <div class="trend-chart-wrap">
+            <div class="trend-chart-label">Missions per Day <span class="orig">(Tickets Closed)</span></div>
+            ${missionsChart}
+          </div>
+          ${resChart ? `<div class="trend-chart-wrap">
+            <div class="trend-chart-label">Avg Resolution Time</div>
+            ${resChart}
+          </div>` : ''}
         </div>
         <div class="trend-table">
           <div class="trend-row trend-header-row">
             <div class="trend-cell trend-date">Date</div>
-            <div class="trend-cell trend-missions">Missions <span class="orig">(Closed)</span></div>
+            <div class="trend-cell trend-missions">Missions</div>
             <div class="trend-cell trend-res">Avg Resolution</div>
           </div>
           ${rows}
