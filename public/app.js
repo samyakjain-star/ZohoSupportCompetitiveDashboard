@@ -75,7 +75,7 @@ function getTierBadge(tier, tierColor) {
 function buildStatPill(icon, label, origLabel, value, type) {
   if (!value || value <= 0) return '';
   const cls = getStatPillClass(value, type);
-  return `<span class="stat-pill ${cls}"><span class="pill-icon">${icon}</span><span class="pill-label">${label}</span> <span style="color:var(--text-3);font-size:10px;">(${origLabel})</span> ${formatDuration(value)}</span>`;
+  return `<span class="stat-pill ${cls}"><span class="pill-icon">${icon}</span><span class="pill-label">${label}</span> <span style="color:var(--text);font-size:10px;">(${origLabel})</span> ${formatDuration(value)}</span>`;
 }
 
 function getRankColor(rank) {
@@ -208,7 +208,7 @@ function openDrawer(op, rank, allOperatives) {
   // Meta: tier + clearance
   elDrawerMeta.innerHTML = `
     ${getTierBadge(op.tier, op.tierColor)}
-    <span style="font-size:11px;color:var(--text-3);">(Clearance Level ${rank})</span>
+    <span style="font-size:11px;color:var(--text);">(Clearance Level ${rank})</span>
   `;
 
   // Team averages for comparison
@@ -277,13 +277,13 @@ function openDrawer(op, rank, allOperatives) {
     <div class="vs-bar-row">
       <div class="vs-bar-name">Missions</div>
       <div class="vs-bar-track"><div class="vs-bar-fill ${missionsPct >= teamMissionsPct ? 'good' : 'neutral'}" style="width:${missionsPct}%"></div></div>
-      <div class="vs-bar-val">${op.missionsCompleted} <span style="color:var(--text-3);font-size:10px;">/ avg ${teamAvgMissions.toFixed(1)}</span></div>
+      <div class="vs-bar-val">${op.missionsCompleted} <span style="color:var(--text);font-size:10px;">/ avg ${teamAvgMissions.toFixed(1)}</span></div>
     </div>
     ${avgRes && teamAvgRes ? `
     <div class="vs-bar-row">
       <div class="vs-bar-name">Resolution</div>
       <div class="vs-bar-track"><div class="vs-bar-fill ${resBarClass}" style="width:${resBarPct}%"></div></div>
-      <div class="vs-bar-val">${formatDuration(avgRes)} <span style="color:var(--text-3);font-size:10px;">/ avg ${formatDuration(teamAvgRes)}</span></div>
+      <div class="vs-bar-val">${formatDuration(avgRes)} <span style="color:var(--text);font-size:10px;">/ avg ${formatDuration(teamAvgRes)}</span></div>
     </div>` : ''}
   `;
 
