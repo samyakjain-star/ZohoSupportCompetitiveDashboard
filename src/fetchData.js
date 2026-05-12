@@ -55,7 +55,8 @@ function assignTier(count) {
   if (count >= 15) return { tier: 'Veteran', tierColor: '#FFB800' };
   if (count >= 10) return { tier: 'Field Agent', tierColor: '#00C9FF' };
   if (count >= 5)  return { tier: 'Recruit', tierColor: '#D1D5DB' };
-  return { tier: 'Inactive Operative', tierColor: '#FF4C6A' };
+  if (count >= 1)  return { tier: 'Trainee', tierColor: '#A78BFA' };
+  return { tier: 'Inactive', tierColor: '#FF4C6A' };
 }
 
 async function makeRequest(url, params, token) {
