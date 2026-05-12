@@ -382,3 +382,135 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(
 
 setInterval(fetchLeaderboard, 5 * 60 * 1000);
 fetchLeaderboard();
+
+// ── Trends Tab ───────────────────────────────────────────────
+
+const elTrendsTab      = document.getElementById('trends-tab');
+const elTrendsList     = document.getElementById('trends-list');
+const elTrendsSearch   = document.getElementById('trends-search');
+const elTrendsCount    = document.getElementById('trends-count');
+const elTrendsLoading  = document.getElementById('trends-loading');
+const elTrendsEmpty    = document.getElementById('trends-empty');
+const elSummaryBar     = document.querySelector('.summary-bar');
+const elTabBtns        = document.querySelectorAll('.tab-btn');
+
+let trendsData = null;
+
+function formatDelta(delta, type) {
+  if (delta === null || delta === undefined) return '';
+  if (delta === 0) return '<span class="delta neutral">—</span>';
+  if (type === 'missions') {
+    const cls = delta > 0 ? 'up-good' : 'down-bad';
+    return `<span class="delta ${cls}">${delta > 0 ? '↑' : '↓'}${Math.abs(delta)}</span>`;
+  }
+  if (type === 'resolution') {
+    // Lower res time = better (down-good), higher = worse (up-bad)
+    const cls = delta < 0 ? 'down-good' : 'up-bad';
+    return `<span class="delta ${cls}">${delta > 0 ? '↑' : '↓'}${formatDuration(Math.abs(delta))}</span>`;
+  }
+  return '';
+}
+
+function renderTrends(agents, query) {
+  const filtered = query
+    ? agents.filter(a => a.name.toLowerCase().includes(query.toLowerCase()))
+    : agents;
+
+  elTrendsCount.textContent = `${filtered.length} agent${filtered.length !== 1 ? 's' : ''}`;
+
+  if (filtered.length === 0) {
+    elTrendsEmpty.classList.remove('hidden');
+    elTrendsList.innerHTML = '';
+    return;
+  }
+  elTrendsEmpty.classList.add('hidden');
+
+  elTrendsList.innerHTML = filtered.map(agent => {
+    const rows = agent.daily.map((d, i) => `
+      <div class="trend-row${i === 0 ? ' trend-row-today' : ''}">
+        <div class="trend-cell trend-date">${d.date}</div>
+        <div class="trend-cell trend-missions">
+          <span>${d.missionsCompleted}</span>
+          ${formatDelta(d.deltaM, 'missions')}
+        </div>
+        <div class="trend-cell trend-res">
+          <span>${formatDuration(d.avgResolutionTimeMs)}</span>
+          ${formatDelta(d.deltaR, 'resolution')}
+        </div>
+      </div>
+    `).join('');
+
+    const totalMissions = agent.daily.reduce((s, d) => s + d.missionsCompleted, 0);
+    const avgMissions   = agent.daysTracked > 0 ? (totalMissions / agent.daysTracked).toFixed(1) : '—';
+    const resEntries    = agent.daily.filter(d => d.avgResolutionTimeMs);
+    const avgRes        = resEntries.length
+      ? Math.round(resEntries.reduce((s, d) => s + d.avgResolutionTimeMs, 0) / resEntries.length)
+      : null;
+
+    return `
+      <div class="trend-card">
+        <div class="trend-card-header">
+          <div class="trend-agent-name">${escapeHtml(agent.name)}</div>
+          <div class="trend-summary">
+            <span class="trend-summary-item">${agent.daysTracked} day${agent.daysTracked !== 1 ? 's' : ''}</span>
+            <span class="trend-summary-item">avg <strong>${avgMissions}</strong> missions/day</span>
+            ${avgRes ? `<span class="trend-summary-item">avg res <strong>${formatDuration(avgRes)}</strong></span>` : ''}
+          </div>
+        </div>
+        <div class="trend-table">
+          <div class="trend-row trend-header-row">
+            <div class="trend-cell trend-date">Date</div>
+            <div class="trend-cell trend-missions">Missions <span class="orig">(Closed)</span></div>
+            <div class="trend-cell trend-res">Avg Resolution</div>
+          </div>
+          ${rows}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+async function fetchTrends() {
+  elTrendsLoading.classList.remove('hidden');
+  elTrendsList.innerHTML = '';
+  elTrendsEmpty.classList.add('hidden');
+  try {
+    const resp = await fetch('/api/trends');
+    const data = await resp.json();
+    if (!resp.ok) { elTrendsLoading.classList.add('hidden'); return; }
+    trendsData = data;
+    elTrendsLoading.classList.add('hidden');
+    renderTrends(trendsData, elTrendsSearch.value.trim());
+  } catch (err) {
+    elTrendsLoading.classList.add('hidden');
+    console.error('[app] fetchTrends error:', err);
+  }
+}
+
+// Tab switching
+elTabBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    const tab = btn.dataset.tab;
+    elTabBtns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    if (tab === 'today') {
+      elBoard.classList.toggle('hidden', !currentData);
+      elTrendsTab.classList.add('hidden');
+      elSummaryBar.classList.remove('hidden');
+      if (!currentData) fetchLeaderboard();
+    } else if (tab === 'trends') {
+      elBoard.classList.add('hidden');
+      elLoading.classList.add('hidden');
+      elError.classList.add('hidden');
+      elSummaryBar.classList.add('hidden');
+      elTrendsTab.classList.remove('hidden');
+      if (!trendsData) fetchTrends();
+    }
+  });
+});
+
+// Search filter
+elTrendsSearch.addEventListener('input', () => {
+  if (trendsData) renderTrends(trendsData, elTrendsSearch.value.trim());
+});
