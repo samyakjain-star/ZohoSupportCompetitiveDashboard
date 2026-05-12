@@ -1,0 +1,1059 @@
+{
+  "tickets": {
+    "3988000048554508": {
+      "id": "3988000048554508",
+      "ticketNumber": "65167",
+      "subject": "Clear routing JOB",
+      "assigneeId": "3988000019940246",
+      "assigneeName": "VISHAL VISHWAKARMA",
+      "createdTime": "2026-05-12T12:07:14.000Z",
+      "closedTime": "2026-05-12T13:32:59.000Z",
+      "resolutionTimeMs": 5145000,
+      "dateClosed": "2026-05-12",
+      "fetchedAt": "2026-05-12T15:09:51.891Z",
+      "assignees": [
+        {
+          "id": "3988000019940246",
+          "name": "VISHAL VISHWAKARMA",
+          "seenAt": "2026-05-12T16:45:48.886Z",
+          "role": "closer"
+        }
+      ]
+    },
+    "3988000048546563": {
+      "id": "3988000048546563",
+      "ticketNumber": "65166",
+      "subject": "Enhancor TTT : Please Add Mentioned Vehilce Details In Vehicle Profile",
+      "assigneeId": "3988000024892155",
+      "assigneeName": "ZAKIR QURESHI",
+      "createdTime": "2026-05-12T12:06:16.000Z",
+      "closedTime": "2026-05-12T14:25:15.000Z",
+      "resolutionTimeMs": 8339000,
+      "dateClosed": "2026-05-12",
+      "fetchedAt": "2026-05-12T15:09:51.891Z",
+      "assignees": [
+        {
+          "id": "3988000024892155",
+          "name": "ZAKIR QURESHI",
+          "seenAt": "2026-05-12T16:45:48.886Z",
+          "role": "closer"
+        }
+      ]
+    },
+    "3988000048566073": {
+      "id": "3988000048566073",
+      "ticketNumber": "65158",
+      "subject": "Clarification Required on Vendor and Cab Details Mismatch",
+      "assigneeId": "3988000046450859",
+      "assigneeName": "DEEPAK ARJUN",
+      "createdTime": "2026-05-12T10:11:59.000Z",
+      "closedTime": "2026-05-12T12:45:04.000Z",
+      "resolutionTimeMs": 9185000,
+      "dateClosed": "2026-05-12",
+      "fetchedAt": "2026-05-12T15:09:51.891Z",
+      "assignees": [
+        {
+          "id": "3988000046450859",
+          "name": "DEEPAK ARJUN",
+          "seenAt": "2026-05-12T16:45:48.886Z",
+          "role": "closer"
+        }
+      ]
+    },
+    "3988000048563103": {
+      "id": "3988000048563103",
+      "ticketNumber": "65152",
+      "subject": "Medtronics: Please enable the Trip SMS for employees",
+      "assigneeId": "3988000006613001",
+      "assigneeName": "AMIT WANI",
+      "createdTime": "2026-05-12T09:25:55.000Z",
+      "closedTime": "2026-05-12T12:53:47.000Z",
+      "resolutionTimeMs": 12472000,
+      "dateClosed": "2026-05-12",
+      "fetchedAt": "2026-05-12T15:09:51.891Z",
+      "assignees": [
+        {
+          "id": "3988000006613001",
+          "name": "AMIT WANI",
+          "seenAt": "2026-05-12T16:45:48.886Z",
+          "role": "closer"
+        }
+      ]
+    },
+    "3988000048572155": {
+      "id": "3988000048572155",
+      "ticketNumber": "65144",
+      "subject": "Issue Downloading Shiftwise Trip Report",
+      "assigneeId": "3988000046450859",
+      "assigneeName": "DEEPAK ARJUN",
+      "createdTime": "2026-05-12T07:55:49.000Z",
+      "closedTime": "2026-05-12T10:36:53.000Z",
+      "resolutionTimeMs": 9664000,
+      "dateClosed": "2026-05-12",
+      "fetchedAt": "2026-05-12T15:09:51.891Z",
+      "assignees": [
+        {
+          "id": "3988000046450859",
+          "name": "DEEPAK ARJUN",
+          "seenAt": "2026-05-12T16:45:48.886Z",
+          "role": "closer"
+        }
+      ]
+    },
+    "3988000048565225": {
+      "id": "3988000048565225",
+      "ticketNumber": "65143",
+      "subject": "Smith & Nephew: Enable the below configuration",
+      "assigneeId": "3988000014411455",
+      "assigneeName": "AMOL CHAUDHARI",
+      "createdTime": "2026-05-12T07:51:51.000Z",
+      "closedTime": "2026-05-12T14:35:44.000Z",
+      "resolutionTimeMs": 24233000,
+      "dateClosed": "2026-05-12",
+      "fetchedAt": "2026-05-12T15:09:51.891Z",
+      "assignees": [
+        {
+          "id": "3988000014411455",
+          "name": "AMOL CHAUDHARI",
+          "seenAt": "2026-05-12T16:45:48.886Z",
+          "role": "closer"
+        }
+      ]
+    },
+    "3988000048551511": {
+      "id": "3988000048551511",
+      "ticketNumber": "65142",
+      "subject": "Maker checker config",
+      "assigneeId": "3988000015979151",
+      "assigneeName": "ADIL SAYED",
+      "createdTime": "2026-05-12T07:41:20.000Z",
+      "closedTime": "2026-05-12T08:32:49.000Z",
+      "resolutionTimeMs": 3089000,
+      "dateClosed": "2026-05-12",
+      "fetchedAt": "2026-05-12T15:09:51.891Z",
+      "assignees": [
+        {
+          "id": "3988000015979151",
+          "name": "ADIL SAYED",
+          "seenAt": "2026-05-12T16:45:48.886Z",
+          "role": "closer"
+        }
+      ]
+    },
+    "3988000048565151": {
+      "id": "3988000048565151",
+      "ticketNumber": "65140",
+      "subject": "Please enable config so employee and admin can roster for different office",
+      "assigneeId": "3988000015979187",
+      "assigneeName": "SWAMI SHEKHAR",
+      "createdTime": "2026-05-12T07:19:11.000Z",
+      "closedTime": "2026-05-12T09:32:56.000Z",
+      "resolutionTimeMs": 8025000,
+      "dateClosed": "2026-05-12",
+      "fetchedAt": "2026-05-12T15:09:51.891Z",
+      "assignees": [
+        {
+          "id": "3988000015979187",
+          "name": "SWAMI SHEKHAR",
+          "seenAt": "2026-05-12T16:45:48.886Z",
+          "role": "closer"
+        }
+      ]
+    },
+    "3988000048536431": {
+      "id": "3988000048536431",
+      "ticketNumber": "65133",
+      "subject": "PRR Cabs - Kindly create the new site and new office",
+      "assigneeId": "3988000015631127",
+      "assigneeName": "SANTHOSH SURENDRAN",
+      "createdTime": "2026-05-12T06:31:30.000Z",
+      "closedTime": "2026-05-12T09:55:33.000Z",
+      "resolutionTimeMs": 12243000,
+      "dateClosed": "2026-05-12",
+      "fetchedAt": "2026-05-12T15:09:51.891Z",
+      "assignees": [
+        {
+          "id": "3988000015631127",
+          "name": "SANTHOSH SURENDRAN",
+          "seenAt": "2026-05-12T16:45:48.886Z",
+          "role": "closer"
+        }
+      ]
+    },
+    "3988000046773001": {
+      "id": "3988000046773001",
+      "ticketNumber": "62926",
+      "subject": "CHN Facility Request to Update Employee Joining Dates in Safetrax tool",
+      "assigneeId": "3988000015631127",
+      "assigneeName": "SANTHOSH SURENDRAN",
+      "createdTime": "2026-03-09T19:06:06.000Z",
+      "closedTime": "2026-05-12T06:25:02.000Z",
+      "resolutionTimeMs": 5483936000,
+      "dateClosed": "2026-05-12",
+      "fetchedAt": "2026-05-12T15:09:51.891Z",
+      "assignees": [
+        {
+          "id": "3988000015631127",
+          "name": "SANTHOSH SURENDRAN",
+          "seenAt": "2026-05-12T16:45:48.886Z",
+          "role": "closer"
+        }
+      ]
+    },
+    "3988000045707003": {
+      "id": "3988000045707003",
+      "ticketNumber": "61513",
+      "subject": "CHN Facility- Request to Update Official Email ID in Safetrax Tool",
+      "assigneeId": "3988000015631127",
+      "assigneeName": "SANTHOSH SURENDRAN",
+      "createdTime": "2026-01-28T00:02:02.000Z",
+      "closedTime": "2026-05-12T06:25:00.000Z",
+      "resolutionTimeMs": 9008578000,
+      "dateClosed": "2026-05-12",
+      "fetchedAt": "2026-05-12T15:09:51.891Z",
+      "assignees": [
+        {
+          "id": "3988000015631127",
+          "name": "SANTHOSH SURENDRAN",
+          "seenAt": "2026-05-12T16:45:48.886Z",
+          "role": "closer"
+        }
+      ]
+    },
+    "3988000048560303": {
+      "id": "3988000048560303",
+      "ticketNumber": "65125",
+      "subject": "Request to modify the trip end buffer time login & logout - BCE Global Tech",
+      "assigneeId": "3988000032593082",
+      "assigneeName": "RAMDASHEMANT PAI",
+      "createdTime": "2026-05-12T05:09:56.000Z",
+      "closedTime": "2026-05-12T08:53:07.000Z",
+      "resolutionTimeMs": 13391000,
+      "dateClosed": "2026-05-12",
+      "fetchedAt": "2026-05-12T15:09:51.891Z",
+      "assignees": [
+        {
+          "id": "3988000032593082",
+          "name": "RAMDASHEMANT PAI",
+          "seenAt": "2026-05-12T16:45:48.886Z",
+          "role": "closer"
+        }
+      ]
+    },
+    "3988000048536336": {
+      "id": "3988000048536336",
+      "ticketNumber": "65123",
+      "subject": "GIA: No Data in Speed Violation Report",
+      "assigneeId": "3988000029723001",
+      "assigneeName": "SRIKANT SAHU",
+      "createdTime": "2026-05-12T04:26:28.000Z",
+      "closedTime": "2026-05-12T08:15:33.000Z",
+      "resolutionTimeMs": 13745000,
+      "dateClosed": "2026-05-12",
+      "fetchedAt": "2026-05-12T15:09:51.891Z",
+      "assignees": [
+        {
+          "id": "3988000029723001",
+          "name": "SRIKANT SAHU",
+          "seenAt": "2026-05-12T16:45:48.886Z",
+          "role": "closer"
+        }
+      ]
+    },
+    "3988000048565077": {
+      "id": "3988000048565077",
+      "ticketNumber": "65119",
+      "subject": "Checklist report data issue",
+      "assigneeId": "3988000015979151",
+      "assigneeName": "ADIL SAYED",
+      "createdTime": "2026-05-12T03:47:14.000Z",
+      "closedTime": "2026-05-12T05:40:51.000Z",
+      "resolutionTimeMs": 6817000,
+      "dateClosed": "2026-05-12",
+      "fetchedAt": "2026-05-12T15:09:51.891Z",
+      "assignees": [
+        {
+          "id": "3988000015979151",
+          "name": "ADIL SAYED",
+          "seenAt": "2026-05-12T16:45:48.886Z",
+          "role": "closer"
+        }
+      ]
+    },
+    "3988000048557140": {
+      "id": "3988000048557140",
+      "ticketNumber": "65115",
+      "subject": "Remittance Advice",
+      "assigneeId": "3988000000050191",
+      "assigneeName": "BUTCHI P",
+      "createdTime": "2026-05-11T21:34:44.000Z",
+      "closedTime": "2026-05-12T06:11:55.000Z",
+      "resolutionTimeMs": 31031000,
+      "dateClosed": "2026-05-12",
+      "fetchedAt": "2026-05-12T15:09:51.891Z",
+      "assignees": [
+        {
+          "id": "3988000000050191",
+          "name": "BUTCHI P",
+          "seenAt": "2026-05-12T16:45:48.886Z",
+          "role": "closer"
+        }
+      ]
+    },
+    "3988000048576060": {
+      "id": "3988000048576060",
+      "ticketNumber": "65114",
+      "subject": "Remittance Advice",
+      "assigneeId": "3988000000050191",
+      "assigneeName": "BUTCHI P",
+      "createdTime": "2026-05-11T21:34:43.000Z",
+      "closedTime": "2026-05-12T06:12:08.000Z",
+      "resolutionTimeMs": 31045000,
+      "dateClosed": "2026-05-12",
+      "fetchedAt": "2026-05-12T15:09:51.891Z",
+      "assignees": [
+        {
+          "id": "3988000000050191",
+          "name": "BUTCHI P",
+          "seenAt": "2026-05-12T16:45:48.886Z",
+          "role": "closer"
+        }
+      ]
+    },
+    "3988000048574017": {
+      "id": "3988000048574017",
+      "ticketNumber": "65113",
+      "subject": "Request to Update Self Roster Status",
+      "assigneeId": "3988000015631127",
+      "assigneeName": "SANTHOSH SURENDRAN",
+      "createdTime": "2026-05-11T21:28:32.000Z",
+      "closedTime": "2026-05-12T01:03:59.000Z",
+      "resolutionTimeMs": 12927000,
+      "dateClosed": "2026-05-12",
+      "fetchedAt": "2026-05-12T15:09:51.891Z",
+      "assignees": [
+        {
+          "id": "3988000015631127",
+          "name": "SANTHOSH SURENDRAN",
+          "seenAt": "2026-05-12T16:45:48.886Z",
+          "role": "closer"
+        }
+      ]
+    },
+    "3988000048567026": {
+      "id": "3988000048567026",
+      "ticketNumber": "65112",
+      "subject": "\"Server\" space mention - @MTAP Support Can any...",
+      "assigneeId": "3988000000050191",
+      "assigneeName": "BUTCHI P",
+      "createdTime": "2026-05-11T17:55:32.000Z",
+      "closedTime": "2026-05-12T06:12:23.000Z",
+      "resolutionTimeMs": 44211000,
+      "dateClosed": "2026-05-12",
+      "fetchedAt": "2026-05-12T15:09:51.891Z",
+      "assignees": [
+        {
+          "id": "3988000000050191",
+          "name": "BUTCHI P",
+          "seenAt": "2026-05-12T16:45:48.886Z",
+          "role": "closer"
+        }
+      ]
+    },
+    "3988000048554255": {
+      "id": "3988000048554255",
+      "ticketNumber": "65111",
+      "subject": "Guidehouse - Kindly inactive the vehicles",
+      "assigneeId": "3988000015631127",
+      "assigneeName": "SANTHOSH SURENDRAN",
+      "createdTime": "2026-05-11T17:12:14.000Z",
+      "closedTime": "2026-05-12T11:54:43.000Z",
+      "resolutionTimeMs": 67349000,
+      "dateClosed": "2026-05-12",
+      "fetchedAt": "2026-05-12T15:09:51.891Z",
+      "assignees": [
+        {
+          "id": "3988000015631127",
+          "name": "SANTHOSH SURENDRAN",
+          "seenAt": "2026-05-12T16:45:48.886Z",
+          "role": "closer"
+        }
+      ]
+    },
+    "3988000048437127": {
+      "id": "3988000048437127",
+      "ticketNumber": "65011",
+      "subject": "Delay in Auto-Triggered Emails – Immediate Attention Required",
+      "assigneeId": "3988000046450859",
+      "assigneeName": "DEEPAK ARJUN",
+      "createdTime": "2026-05-08T10:04:00.000Z",
+      "closedTime": "2026-05-12T04:37:45.000Z",
+      "resolutionTimeMs": 326025000,
+      "dateClosed": "2026-05-12",
+      "fetchedAt": "2026-05-12T15:09:51.891Z",
+      "assignees": [
+        {
+          "id": "3988000046450859",
+          "name": "DEEPAK ARJUN",
+          "seenAt": "2026-05-12T16:45:48.886Z",
+          "role": "closer"
+        }
+      ]
+    },
+    "3988000048565005": {
+      "id": "3988000048565005",
+      "ticketNumber": "65110",
+      "subject": "Screenrecord/screenshot for flutter app",
+      "assigneeId": "3988000015979151",
+      "assigneeName": "ADIL SAYED",
+      "createdTime": "2026-05-11T14:36:41.000Z",
+      "closedTime": "2026-05-12T04:23:56.000Z",
+      "resolutionTimeMs": 49635000,
+      "dateClosed": "2026-05-12",
+      "fetchedAt": "2026-05-12T15:09:51.891Z",
+      "assignees": [
+        {
+          "id": "3988000015979151",
+          "name": "ADIL SAYED",
+          "seenAt": "2026-05-12T16:45:48.886Z",
+          "role": "closer"
+        }
+      ]
+    },
+    "3988000048558249": {
+      "id": "3988000048558249",
+      "ticketNumber": "65109",
+      "subject": "Aml : remove blacklisted",
+      "assigneeId": "3988000022631352",
+      "assigneeName": "AKSHAY SINGH",
+      "createdTime": "2026-05-11T14:29:06.000Z",
+      "closedTime": "2026-05-12T06:58:38.000Z",
+      "resolutionTimeMs": 59372000,
+      "dateClosed": "2026-05-12",
+      "fetchedAt": "2026-05-12T15:09:51.891Z",
+      "assignees": [
+        {
+          "id": "3988000022631352",
+          "name": "AKSHAY SINGH",
+          "seenAt": "2026-05-12T16:45:48.886Z",
+          "role": "closer"
+        }
+      ]
+    },
+    "3988000048544043": {
+      "id": "3988000048544043",
+      "ticketNumber": "65107",
+      "subject": "RE: safetrax and commuter transport booking issue",
+      "assigneeId": "3988000000050191",
+      "assigneeName": "BUTCHI P",
+      "createdTime": "2026-05-11T14:07:34.000Z",
+      "closedTime": "2026-05-12T06:12:50.000Z",
+      "resolutionTimeMs": 57916000,
+      "dateClosed": "2026-05-12",
+      "fetchedAt": "2026-05-12T15:09:51.891Z",
+      "assignees": [
+        {
+          "id": "3988000000050191",
+          "name": "BUTCHI P",
+          "seenAt": "2026-05-12T16:45:48.886Z",
+          "role": "closer"
+        }
+      ]
+    },
+    "3988000048569247": {
+      "id": "3988000048569247",
+      "ticketNumber": "65106",
+      "subject": "Please insert logo as mentioned",
+      "assigneeId": "3988000015979187",
+      "assigneeName": "SWAMI SHEKHAR",
+      "createdTime": "2026-05-11T14:01:18.000Z",
+      "closedTime": "2026-05-12T14:01:47.000Z",
+      "resolutionTimeMs": 86429000,
+      "dateClosed": "2026-05-12",
+      "fetchedAt": "2026-05-12T15:09:51.891Z",
+      "assignees": [
+        {
+          "id": "3988000015979187",
+          "name": "SWAMI SHEKHAR",
+          "seenAt": "2026-05-12T16:45:48.886Z",
+          "role": "closer"
+        }
+      ]
+    },
+    "3988000048546175": {
+      "id": "3988000048546175",
+      "ticketNumber": "65105",
+      "subject": "Rehlko : Please Reset Employee Id Password",
+      "assigneeId": "3988000024892155",
+      "assigneeName": "ZAKIR QURESHI",
+      "createdTime": "2026-05-11T13:53:32.000Z",
+      "closedTime": "2026-05-12T03:59:28.000Z",
+      "resolutionTimeMs": 50756000,
+      "dateClosed": "2026-05-12",
+      "fetchedAt": "2026-05-12T15:09:51.891Z",
+      "assignees": [
+        {
+          "id": "3988000024892155",
+          "name": "ZAKIR QURESHI",
+          "seenAt": "2026-05-12T16:45:48.886Z",
+          "role": "closer"
+        }
+      ]
+    },
+    "3988000048560231": {
+      "id": "3988000048560231",
+      "ticketNumber": "65099",
+      "subject": "SSNC : Office change",
+      "assigneeId": "3988000022631352",
+      "assigneeName": "AKSHAY SINGH",
+      "createdTime": "2026-05-11T11:45:24.000Z",
+      "closedTime": "2026-05-12T06:58:41.000Z",
+      "resolutionTimeMs": 69197000,
+      "dateClosed": "2026-05-12",
+      "fetchedAt": "2026-05-12T15:09:51.891Z",
+      "assignees": [
+        {
+          "id": "3988000022631352",
+          "name": "AKSHAY SINGH",
+          "seenAt": "2026-05-12T16:45:48.886Z",
+          "role": "closer"
+        }
+      ]
+    },
+    "3988000048554173": {
+      "id": "3988000048554173",
+      "ticketNumber": "65096",
+      "subject": "Please update the stoppage geofence to 200 meters in tsrs.safebus.io",
+      "assigneeId": "3988000006770001",
+      "assigneeName": "SIDDHARTH",
+      "createdTime": "2026-05-11T11:11:58.000Z",
+      "closedTime": "2026-05-12T09:09:14.000Z",
+      "resolutionTimeMs": 79036000,
+      "dateClosed": "2026-05-12",
+      "fetchedAt": "2026-05-12T15:09:51.891Z",
+      "assignees": [
+        {
+          "id": "3988000006770001",
+          "name": "SIDDHARTH",
+          "seenAt": "2026-05-12T16:45:48.886Z",
+          "role": "closer"
+        }
+      ]
+    },
+    "3988000048569081": {
+      "id": "3988000048569081",
+      "ticketNumber": "65094",
+      "subject": "Guidehouse - Kindly update the configurations for Guidehouse Chennai & Guidehouse Chennai Keppel site only",
+      "assigneeId": "3988000015631127",
+      "assigneeName": "SANTHOSH SURENDRAN",
+      "createdTime": "2026-05-11T10:59:01.000Z",
+      "closedTime": "2026-05-12T01:54:31.000Z",
+      "resolutionTimeMs": 53730000,
+      "dateClosed": "2026-05-12",
+      "fetchedAt": "2026-05-12T15:09:51.891Z",
+      "assignees": [
+        {
+          "id": "3988000015631127",
+          "name": "SANTHOSH SURENDRAN",
+          "seenAt": "2026-05-12T16:45:48.886Z",
+          "role": "closer"
+        }
+      ]
+    },
+    "3988000048568001": {
+      "id": "3988000048568001",
+      "ticketNumber": "65083",
+      "subject": "Please enable the config as mentioned",
+      "assigneeId": "3988000015979187",
+      "assigneeName": "SWAMI SHEKHAR",
+      "createdTime": "2026-05-11T09:35:13.000Z",
+      "closedTime": "2026-05-12T14:02:24.000Z",
+      "resolutionTimeMs": 102431000,
+      "dateClosed": "2026-05-12",
+      "fetchedAt": "2026-05-12T15:09:51.891Z",
+      "assignees": [
+        {
+          "id": "3988000015979187",
+          "name": "SWAMI SHEKHAR",
+          "seenAt": "2026-05-12T16:45:48.886Z",
+          "role": "closer"
+        }
+      ]
+    },
+    "3988000048560001": {
+      "id": "3988000048560001",
+      "ticketNumber": "65079",
+      "subject": "MDI NetworX - Enable Confirmations when Trip is Active",
+      "assigneeId": "3988000000501556",
+      "assigneeName": "PRASHANT BABURAO",
+      "createdTime": "2026-05-11T09:10:33.000Z",
+      "closedTime": "2026-05-12T05:54:27.000Z",
+      "resolutionTimeMs": 74634000,
+      "dateClosed": "2026-05-12",
+      "fetchedAt": "2026-05-12T15:09:51.891Z",
+      "assignees": [
+        {
+          "id": "3988000000501556",
+          "name": "PRASHANT BABURAO",
+          "seenAt": "2026-05-12T16:45:48.886Z",
+          "role": "closer"
+        }
+      ]
+    },
+    "3988000048546017": {
+      "id": "3988000048546017",
+      "ticketNumber": "65077",
+      "subject": "Locality data issue - Employee profile",
+      "assigneeId": "3988000015979151",
+      "assigneeName": "ADIL SAYED",
+      "createdTime": "2026-05-11T08:42:42.000Z",
+      "closedTime": "2026-05-12T13:31:05.000Z",
+      "resolutionTimeMs": 103703000,
+      "dateClosed": "2026-05-12",
+      "fetchedAt": "2026-05-12T15:09:51.891Z",
+      "assignees": [
+        {
+          "id": "3988000015979151",
+          "name": "ADIL SAYED",
+          "seenAt": "2026-05-12T16:45:48.886Z",
+          "role": "closer"
+        }
+      ]
+    },
+    "3988000048536001": {
+      "id": "3988000048536001",
+      "ticketNumber": "65074",
+      "subject": "Data Request - Distance between Home and Nodal points for Employees - RCH Service",
+      "assigneeId": "3988000017265073",
+      "assigneeName": "THINESH S",
+      "createdTime": "2026-05-11T07:52:51.000Z",
+      "closedTime": "2026-05-12T06:39:58.000Z",
+      "resolutionTimeMs": 82027000,
+      "dateClosed": "2026-05-12",
+      "fetchedAt": "2026-05-12T15:09:51.891Z",
+      "assignees": [
+        {
+          "id": "3988000017265073",
+          "name": "THINESH S",
+          "seenAt": "2026-05-12T16:45:48.886Z",
+          "role": "closer"
+        }
+      ]
+    },
+    "3988000048513005": {
+      "id": "3988000048513005",
+      "ticketNumber": "65072",
+      "subject": "Kindly add office buffer for logout as 15 minutes - RCH Service",
+      "assigneeId": "3988000017265073",
+      "assigneeName": "THINESH S",
+      "createdTime": "2026-05-11T07:33:35.000Z",
+      "closedTime": "2026-05-12T07:23:35.000Z",
+      "resolutionTimeMs": 85800000,
+      "dateClosed": "2026-05-12",
+      "fetchedAt": "2026-05-12T15:09:51.891Z",
+      "assignees": [
+        {
+          "id": "3988000017265073",
+          "name": "THINESH S",
+          "seenAt": "2026-05-12T16:45:48.886Z",
+          "role": "closer"
+        }
+      ]
+    },
+    "3988000048500301": {
+      "id": "3988000048500301",
+      "ticketNumber": "65071",
+      "subject": "Feedback email",
+      "assigneeId": "3988000021288181",
+      "assigneeName": "ANILKUMAR GUDE",
+      "createdTime": "2026-05-11T07:13:51.000Z",
+      "closedTime": "2026-05-12T11:49:31.000Z",
+      "resolutionTimeMs": 102940000,
+      "dateClosed": "2026-05-12",
+      "fetchedAt": "2026-05-12T15:09:51.891Z",
+      "assignees": [
+        {
+          "id": "3988000021288181",
+          "name": "ANILKUMAR GUDE",
+          "seenAt": "2026-05-12T16:45:48.886Z",
+          "role": "closer"
+        }
+      ]
+    },
+    "3988000048504001": {
+      "id": "3988000048504001",
+      "ticketNumber": "65056",
+      "subject": "reset password request",
+      "assigneeId": "3988000039153814",
+      "assigneeName": "NAVEEN KUMAR",
+      "createdTime": "2026-05-11T04:37:51.000Z",
+      "closedTime": "2026-05-12T06:30:47.000Z",
+      "resolutionTimeMs": 93176000,
+      "dateClosed": "2026-05-12",
+      "fetchedAt": "2026-05-12T15:09:51.891Z",
+      "assignees": [
+        {
+          "id": "3988000039153814",
+          "name": "NAVEEN KUMAR",
+          "seenAt": "2026-05-12T16:45:48.886Z",
+          "role": "closer"
+        }
+      ]
+    },
+    "3988000048500001": {
+      "id": "3988000048500001",
+      "ticketNumber": "65049",
+      "subject": "Special case query",
+      "assigneeId": "3988000015979151",
+      "assigneeName": "ADIL SAYED",
+      "createdTime": "2026-05-11T03:28:12.000Z",
+      "closedTime": "2026-05-12T10:25:47.000Z",
+      "resolutionTimeMs": 111455000,
+      "dateClosed": "2026-05-12",
+      "fetchedAt": "2026-05-12T15:09:51.891Z",
+      "assignees": [
+        {
+          "id": "3988000015979151",
+          "name": "ADIL SAYED",
+          "seenAt": "2026-05-12T16:45:48.886Z",
+          "role": "closer"
+        }
+      ]
+    },
+    "3988000048399311": {
+      "id": "3988000048399311",
+      "ticketNumber": "65036",
+      "subject": "modify trip edit and trip confirmation edit cut off for admins as 15 days ",
+      "assigneeId": "3988000017265073",
+      "assigneeName": "THINESH S",
+      "createdTime": "2026-05-09T09:04:30.000Z",
+      "closedTime": "2026-05-12T06:39:31.000Z",
+      "resolutionTimeMs": 250501000,
+      "dateClosed": "2026-05-12",
+      "fetchedAt": "2026-05-12T15:09:51.891Z",
+      "assignees": [
+        {
+          "id": "3988000017265073",
+          "name": "THINESH S",
+          "seenAt": "2026-05-12T16:45:48.886Z",
+          "role": "closer"
+        }
+      ]
+    },
+    "3988000048446088": {
+      "id": "3988000048446088",
+      "ticketNumber": "65017",
+      "subject": "Issue : not able to move employee or delete employee from trip",
+      "assigneeId": "3988000019940246",
+      "assigneeName": "VISHAL VISHWAKARMA",
+      "createdTime": "2026-05-08T11:06:33.000Z",
+      "closedTime": "2026-05-12T12:01:35.000Z",
+      "resolutionTimeMs": 348902000,
+      "dateClosed": "2026-05-12",
+      "fetchedAt": "2026-05-12T15:09:51.891Z",
+      "assignees": [
+        {
+          "id": "3988000019940246",
+          "name": "VISHAL VISHWAKARMA",
+          "seenAt": "2026-05-12T16:45:48.886Z",
+          "role": "closer"
+        }
+      ]
+    },
+    "3988000048433089": {
+      "id": "3988000048433089",
+      "ticketNumber": "65012",
+      "subject": "Delay in Auto-Generated Emails",
+      "assigneeId": "3988000046450859",
+      "assigneeName": "DEEPAK ARJUN",
+      "createdTime": "2026-05-08T10:14:19.000Z",
+      "closedTime": "2026-05-12T04:38:07.000Z",
+      "resolutionTimeMs": 325428000,
+      "dateClosed": "2026-05-12",
+      "fetchedAt": "2026-05-12T15:09:51.891Z",
+      "assignees": [
+        {
+          "id": "3988000046450859",
+          "name": "DEEPAK ARJUN",
+          "seenAt": "2026-05-12T16:45:48.886Z",
+          "role": "closer"
+        }
+      ]
+    },
+    "3988000048397157": {
+      "id": "3988000048397157",
+      "ticketNumber": "64979",
+      "subject": "Kindly give access for the mentioned site for theshared ids",
+      "assigneeId": "3988000017265073",
+      "assigneeName": "THINESH S",
+      "createdTime": "2026-05-08T06:45:24.000Z",
+      "closedTime": "2026-05-12T06:39:12.000Z",
+      "resolutionTimeMs": 345228000,
+      "dateClosed": "2026-05-12",
+      "fetchedAt": "2026-05-12T15:09:51.891Z",
+      "assignees": [
+        {
+          "id": "3988000017265073",
+          "name": "THINESH S",
+          "seenAt": "2026-05-12T16:45:48.886Z",
+          "role": "closer"
+        }
+      ]
+    },
+    "3988000048398093": {
+      "id": "3988000048398093",
+      "ticketNumber": "64976",
+      "subject": "SitusAMC - New site creation under app.safetrax.in",
+      "assigneeId": "3988000029723001",
+      "assigneeName": "SRIKANT SAHU",
+      "createdTime": "2026-05-08T05:49:01.000Z",
+      "closedTime": "2026-05-12T08:15:13.000Z",
+      "resolutionTimeMs": 354372000,
+      "dateClosed": "2026-05-12",
+      "fetchedAt": "2026-05-12T15:09:51.891Z",
+      "assignees": [
+        {
+          "id": "3988000029723001",
+          "name": "SRIKANT SAHU",
+          "seenAt": "2026-05-12T16:45:48.886Z",
+          "role": "closer"
+        }
+      ]
+    },
+    "3988000048432001": {
+      "id": "3988000048432001",
+      "ticketNumber": "64966",
+      "subject": "WNS Checklist & Escort Config Update",
+      "assigneeId": "3988000015979151",
+      "assigneeName": "ADIL SAYED",
+      "createdTime": "2026-05-08T04:20:02.000Z",
+      "closedTime": "2026-05-12T05:41:03.000Z",
+      "resolutionTimeMs": 350461000,
+      "dateClosed": "2026-05-12",
+      "fetchedAt": "2026-05-12T15:09:51.891Z",
+      "assignees": [
+        {
+          "id": "3988000015979151",
+          "name": "ADIL SAYED",
+          "seenAt": "2026-05-12T16:45:48.886Z",
+          "role": "closer"
+        }
+      ]
+    },
+    "3988000048407001": {
+      "id": "3988000048407001",
+      "ticketNumber": "64963",
+      "subject": "Zomato Billing - April 2026",
+      "assigneeId": "3988000034047053",
+      "assigneeName": "VAIBHAV RAGHAV",
+      "createdTime": "2026-05-07T13:56:49.000Z",
+      "closedTime": "2026-05-12T04:18:39.000Z",
+      "resolutionTimeMs": 397310000,
+      "dateClosed": "2026-05-12",
+      "fetchedAt": "2026-05-12T15:09:51.891Z",
+      "assignees": [
+        {
+          "id": "3988000034047053",
+          "name": "VAIBHAV RAGHAV",
+          "seenAt": "2026-05-12T16:45:48.886Z",
+          "role": "closer"
+        }
+      ]
+    },
+    "3988000048343633": {
+      "id": "3988000048343633",
+      "ticketNumber": "64948",
+      "subject": "FPS Innovation  -  Config Update request",
+      "assigneeId": "3988000000501556",
+      "assigneeName": "PRASHANT BABURAO",
+      "createdTime": "2026-05-07T09:49:43.000Z",
+      "closedTime": "2026-05-12T12:20:40.000Z",
+      "resolutionTimeMs": 441057000,
+      "dateClosed": "2026-05-12",
+      "fetchedAt": "2026-05-12T15:09:51.891Z",
+      "assignees": [
+        {
+          "id": "3988000000501556",
+          "name": "PRASHANT BABURAO",
+          "seenAt": "2026-05-12T16:45:48.886Z",
+          "role": "closer"
+        }
+      ]
+    },
+    "3988000048353062": {
+      "id": "3988000048353062",
+      "ticketNumber": "64929",
+      "subject": "Configs",
+      "assigneeId": "3988000021288181",
+      "assigneeName": "ANILKUMAR GUDE",
+      "createdTime": "2026-05-07T06:02:49.000Z",
+      "closedTime": "2026-05-12T09:41:01.000Z",
+      "resolutionTimeMs": 445092000,
+      "dateClosed": "2026-05-12",
+      "fetchedAt": "2026-05-12T15:09:51.891Z",
+      "assignees": [
+        {
+          "id": "3988000021288181",
+          "name": "ANILKUMAR GUDE",
+          "seenAt": "2026-05-12T16:45:48.886Z",
+          "role": "closer"
+        }
+      ]
+    },
+    "3988000048335283": {
+      "id": "3988000048335283",
+      "ticketNumber": "64886",
+      "subject": "Config Request - On 8th May 2026",
+      "assigneeId": "3988000015979151",
+      "assigneeName": "ADIL SAYED",
+      "createdTime": "2026-05-06T06:25:50.000Z",
+      "closedTime": "2026-05-12T05:41:44.000Z",
+      "resolutionTimeMs": 515754000,
+      "dateClosed": "2026-05-12",
+      "fetchedAt": "2026-05-12T15:09:51.891Z",
+      "assignees": [
+        {
+          "id": "3988000015979151",
+          "name": "ADIL SAYED",
+          "seenAt": "2026-05-12T16:45:48.886Z",
+          "role": "closer"
+        }
+      ]
+    },
+    "3988000048256854": {
+      "id": "3988000048256854",
+      "ticketNumber": "64837",
+      "subject": "Request to Close Shell Production and Staging Instances",
+      "assigneeId": "3988000000050191",
+      "assigneeName": "BUTCHI P",
+      "createdTime": "2026-05-05T06:41:01.000Z",
+      "closedTime": "2026-05-12T06:03:54.000Z",
+      "resolutionTimeMs": 602573000,
+      "dateClosed": "2026-05-12",
+      "fetchedAt": "2026-05-12T15:09:51.891Z",
+      "assignees": [
+        {
+          "id": "3988000000050191",
+          "name": "BUTCHI P",
+          "seenAt": "2026-05-12T16:45:48.886Z",
+          "role": "closer"
+        }
+      ]
+    },
+    "3988000048315174": {
+      "id": "3988000048315174",
+      "ticketNumber": "64832",
+      "subject": "We are unable to generate the billing report - westpharma.",
+      "assigneeId": "3988000046450859",
+      "assigneeName": "DEEPAK ARJUN",
+      "createdTime": "2026-05-05T05:45:43.000Z",
+      "closedTime": "2026-05-12T12:44:34.000Z",
+      "resolutionTimeMs": 629931000,
+      "dateClosed": "2026-05-12",
+      "fetchedAt": "2026-05-12T15:09:51.891Z",
+      "assignees": [
+        {
+          "id": "3988000046450859",
+          "name": "DEEPAK ARJUN",
+          "seenAt": "2026-05-12T16:45:48.886Z",
+          "role": "closer"
+        }
+      ]
+    },
+    "3988000048299315": {
+      "id": "3988000048299315",
+      "ticketNumber": "64826",
+      "subject": "Please enable Auto Alight and Auto No Show config",
+      "assigneeId": "3988000029723001",
+      "assigneeName": "SRIKANT SAHU",
+      "createdTime": "2026-05-05T04:19:09.000Z",
+      "closedTime": "2026-05-12T08:15:01.000Z",
+      "resolutionTimeMs": 618952000,
+      "dateClosed": "2026-05-12",
+      "fetchedAt": "2026-05-12T15:09:51.891Z",
+      "assignees": [
+        {
+          "id": "3988000029723001",
+          "name": "SRIKANT SAHU",
+          "seenAt": "2026-05-12T16:45:48.886Z",
+          "role": "closer"
+        }
+      ]
+    },
+    "3988000048293486": {
+      "id": "3988000048293486",
+      "ticketNumber": "64797",
+      "subject": "Maersk: Vehicle and Driver Compliance document View and Download concern",
+      "assigneeId": "3988000006613001",
+      "assigneeName": "AMIT WANI",
+      "createdTime": "2026-05-04T07:48:20.000Z",
+      "closedTime": "2026-05-12T12:33:49.000Z",
+      "resolutionTimeMs": 708329000,
+      "dateClosed": "2026-05-12",
+      "fetchedAt": "2026-05-12T15:09:51.891Z",
+      "assignees": [
+        {
+          "id": "3988000006613001",
+          "name": "AMIT WANI",
+          "seenAt": "2026-05-12T16:45:48.886Z",
+          "role": "closer"
+        }
+      ]
+    },
+    "3988000048156671": {
+      "id": "3988000048156671",
+      "ticketNumber": "64655",
+      "subject": "WNS: Please implement new billing logic",
+      "assigneeId": "3988000014411455",
+      "assigneeName": "AMOL CHAUDHARI",
+      "createdTime": "2026-04-28T08:13:29.000Z",
+      "closedTime": "2026-05-12T07:53:22.000Z",
+      "resolutionTimeMs": 1208393000,
+      "dateClosed": "2026-05-12",
+      "fetchedAt": "2026-05-12T15:09:51.891Z",
+      "assignees": [
+        {
+          "id": "3988000014411455",
+          "name": "AMOL CHAUDHARI",
+          "seenAt": "2026-05-12T16:45:48.886Z",
+          "role": "closer"
+        }
+      ]
+    },
+    "3988000048573190": {
+      "id": "3988000048573190",
+      "ticketNumber": "65184",
+      "subject": "Vehicle Reaching Time is Missing in Trip Report",
+      "createdTime": "2026-05-12T14:36:44.000Z",
+      "closedTime": "2026-05-12T15:45:29.000Z",
+      "resolutionTimeMs": 4125000,
+      "dateClosed": "2026-05-12",
+      "firstFetchedAt": "2026-05-12T16:45:48.886Z",
+      "assignees": [
+        {
+          "id": "3988000015979151",
+          "name": "ADIL SAYED",
+          "seenAt": "2026-05-12T16:45:48.886Z",
+          "role": "closer"
+        }
+      ]
+    }
+  },
+  "runs": [
+    {
+      "date": "2026-05-12",
+      "fetchedAt": "2026-05-12T15:09:51.891Z",
+      "totalTickets": 52,
+      "newTicketsAdded": 51,
+      "squadSize": 18
+    },
+    {
+      "date": "2026-05-12",
+      "fetchedAt": "2026-05-12T16:45:48.886Z",
+      "totalTickets": 52,
+      "newTicketsAdded": 1,
+      "squadSize": 18
+    }
+  ],
+  "lastUpdated": "2026-05-12T16:45:48.887Z"
+}

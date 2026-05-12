@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OP BOARD | mtap Support</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;0,14..32,900;1,14..32,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Header -->
+  <header id="header">
+    <div class="header-left">
+      <span class="logo">&#x26A1; OP BOARD</span>
+      <div class="live-indicator">
+        <div class="live-dot"></div>
+        <span>LIVE</span>
+      </div>
+    </div>
+    <div class="header-center">
+      <span id="day-counter">DAY — OF OPERATIONS</span>
+    </div>
+    <div class="header-right">
+      <span id="last-updated">LAST UPDATED: —</span>
+      <button id="refresh-btn" class="refresh-btn">&#x21BA; REFRESH</button>
+    </div>
+  </header>
+
+  <!-- Summary stat cards -->
+  <section class="summary-bar">
+    <div class="stat-card">
+      <div class="stat-value" id="total-missions">—</div>
+      <div class="stat-label">MISSIONS TODAY <span class="orig">(Tickets Closed)</span></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="squad-size">—</div>
+      <div class="stat-label">SQUAD SIZE <span class="orig">(Active Agents)</span></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="squad-leader-name">—</div>
+      <div class="stat-label">SQUAD LEADER <span class="orig">(Top Performer)</span></div>
+    </div>
+  </section>
+
+  <!-- Loading state -->
+  <div id="loading" class="loading-overlay">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">LOADING MISSION DATA...</div>
+  </div>
+
+  <!-- Error state -->
+  <div id="error-state" class="error-state hidden">
+    <div class="error-icon">&#x26A0;</div>
+    <div id="error-message">NO MISSION DATA AVAILABLE</div>
+    <button class="refresh-btn retry-btn" id="retry-btn">&#x21BA; RETRY</button>
+  </div>
+
+  <!-- Main board -->
+  <main id="board" class="hidden">
+
+    <!-- Podium section (top 3) -->
+    <section class="podium-section">
+      <div class="section-label">TOP OPERATIVES <span class="orig">(Top Agents)</span></div>
+      <div class="podium" id="podium">
+        <!-- populated by JS -->
+      </div>
+    </section>
+
+    <!-- Rest of the board (rank 4+) -->
+    <section class="leaderboard-section" id="leaderboard-section">
+      <div class="section-label">FULL ROSTER <span class="orig">(All Agents)</span></div>
+      <div class="leaderboard-table" id="leaderboard-table">
+        <!-- table rows populated by JS -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Detail Drawer -->
+  <div id="drawer-overlay" class="drawer-overlay hidden"></div>
+  <aside id="detail-drawer" class="detail-drawer hidden">
+    <div class="drawer-header">
+      <button id="drawer-close" class="drawer-close" aria-label="Close">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M14 4L4 14M4 4l10 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </button>
+      <span id="drawer-rank-badge" class="drawer-rank-badge"></span>
+    </div>
+    <div class="drawer-body">
+      <div class="drawer-agent-name" id="drawer-agent-name"></div>
+      <div class="drawer-meta" id="drawer-meta"></div>
+      <div class="drawer-metrics" id="drawer-metrics"></div>
+      <div class="drawer-vs-team" id="drawer-vs-team"></div>
+      <div class="drawer-tickets" id="drawer-tickets"></div>
+    </div>
+  </aside>
+
+  <script src="app.js"></script>
+</body>
+</html>
