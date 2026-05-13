@@ -4,7 +4,7 @@ const express = require('express');
 const cron = require('node-cron');
 require('dotenv').config({ path: path.join(__dirname, '../.env') });
 
-const { fetchLeaderboardData } = require('./fetchData');
+const { fetchLeaderboardData, fetchDataForDate } = require('./fetchData');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -35,19 +35,36 @@ function readLeaderboard() {
 // Serve static files from public/
 app.use(express.static(path.join(__dirname, '../public')));
 
-function computeCumulative() {
+function assignTierFromCount(c) {
+  if (c >= 20) return { tier: 'Champion',  tierColor: '#00FFB2' };
+  if (c >= 15) return { tier: 'Expert',    tierColor: '#FFB800' };
+  if (c >= 10) return { tier: 'Senior',    tierColor: '#00C9FF' };
+  if (c >= 5)  return { tier: 'Associate', tierColor: '#D1D5DB' };
+  if (c >= 1)  return { tier: 'Junior',    tierColor: '#A78BFA' };
+  return           { tier: 'Inactive',  tierColor: '#FF4C6A' };
+}
+
+function computeCumulativeStats() {
   if (!fs.existsSync(HISTORY_PATH)) return {};
   try {
     const history = JSON.parse(fs.readFileSync(HISTORY_PATH, 'utf8'));
-    const totals = {};
+    const stats = {};
     for (const ticket of Object.values(history.tickets)) {
       if (!Array.isArray(ticket.assignees) || !ticket.assignees.length) continue;
       const assignee = ticket.assignees[0];
       const id = assignee.id;
-      if (!totals[id]) totals[id] = { cumulativeMissions: 0, name: assignee.name };
-      totals[id].cumulativeMissions++;
+      if (!stats[id]) stats[id] = { count: 0, name: assignee.name, totalResMs: 0, resCount: 0 };
+      stats[id].count++;
+      if (ticket.resolutionTimeMs) {
+        stats[id].totalResMs += ticket.resolutionTimeMs;
+        stats[id].resCount++;
+      }
     }
-    return totals;
+    for (const s of Object.values(stats)) {
+      s.cumulativeMissions = s.count;
+      s.cumulativeAvgResolutionMs = s.resCount > 0 ? Math.round(s.totalResMs / s.resCount) : null;
+    }
+    return stats;
   } catch { return {}; }
 }
 
@@ -58,45 +75,71 @@ app.get('/api/leaderboard', (req, res) => {
     return res.status(404).json({ error: 'No data yet', noData: true });
   }
 
-  // Enrich each operative with cumulative all-time missions from history
-  const cumulative = computeCumulative();
-  const operatives = (data.operatives || []).map(op => ({
-    ...op,
-    cumulativeMissions: cumulative[op.id]?.cumulativeMissions ?? op.missionsCompleted,
-  }));
+  const cumStats = computeCumulativeStats();
 
-  // Add agents present in history but not in today's data (0 tickets today)
-  for (const [id, cum] of Object.entries(cumulative)) {
+  // Enrich with cumulative data + recompute tier from cumulative count
+  const operatives = (data.operatives || []).map(op => {
+    const cum = cumStats[op.id];
+    const cumulativeMissions = cum?.cumulativeMissions ?? op.missionsCompleted;
+    return {
+      ...op,
+      cumulativeMissions,
+      cumulativeAvgResolutionMs: cum?.cumulativeAvgResolutionMs ?? null,
+      ...assignTierFromCount(cumulativeMissions),
+    };
+  });
+
+  // Add agents in history who had 0 tickets today
+  for (const [id, cum] of Object.entries(cumStats)) {
     if (!operatives.find(o => o.id === id)) {
-      const { tier, tierColor } = (() => {
-        const c = cum.cumulativeMissions;
-        if (c >= 20) return { tier: 'Squad Leader', tierColor: '#00FFB2' };
-        if (c >= 15) return { tier: 'Veteran',      tierColor: '#FFB800' };
-        if (c >= 10) return { tier: 'Field Agent',  tierColor: '#00C9FF' };
-        if (c >= 5)  return { tier: 'Recruit',      tierColor: '#D1D5DB' };
-        if (c >= 1)  return { tier: 'Trainee',      tierColor: '#A78BFA' };
-        return           { tier: 'Inactive',     tierColor: '#FF4C6A' };
-      })();
       operatives.push({
         id, name: cum.name, missionsCompleted: 0,
         cumulativeMissions: cum.cumulativeMissions,
+        cumulativeAvgResolutionMs: cum.cumulativeAvgResolutionMs,
         avgResolutionTimeMs: null, avgFirstResponseTimeMs: null,
         minResolutionTimeMs: null, maxResolutionTimeMs: null,
-        tickets: [], tier, tierColor,
+        tickets: [], ...assignTierFromCount(cum.cumulativeMissions),
       });
     }
   }
 
-  // Re-sort by cumulativeMissions desc, tie-break: today's missions desc, then avg res asc
-  operatives.sort((a, b) => {
-    if (b.cumulativeMissions !== a.cumulativeMissions) return b.cumulativeMissions - a.cumulativeMissions;
-    if (b.missionsCompleted !== a.missionsCompleted) return b.missionsCompleted - a.missionsCompleted;
-    if (a.avgResolutionTimeMs === null) return 1;
-    if (b.avgResolutionTimeMs === null) return -1;
-    return a.avgResolutionTimeMs - b.avgResolutionTimeMs;
+  // Compute performance score for each agent (scored against others, self excluded)
+  const scored = operatives.map(op => {
+    const others = operatives.filter(o => o.id !== op.id && o.cumulativeMissions > 0);
+
+    if (op.cumulativeMissions === 0) {
+      return { ...op, ticketScore: 0, resolutionScore: null, performanceScore: 0 };
+    }
+    if (others.length === 0) {
+      return { ...op, ticketScore: 100, resolutionScore: null, performanceScore: 100 };
+    }
+
+    const avgOthersTickets = others.reduce((s, o) => s + o.cumulativeMissions, 0) / others.length;
+    const ticketScore = avgOthersTickets > 0
+      ? Math.round((op.cumulativeMissions / avgOthersTickets) * 1000) / 10
+      : 100;
+
+    const othersWithRes = others.filter(o => o.cumulativeAvgResolutionMs);
+    let resolutionScore = null;
+    if (op.cumulativeAvgResolutionMs && othersWithRes.length > 0) {
+      const avgOthersRes = othersWithRes.reduce((s, o) => s + o.cumulativeAvgResolutionMs, 0) / othersWithRes.length;
+      resolutionScore = Math.round((avgOthersRes / op.cumulativeAvgResolutionMs) * 1000) / 10;
+    }
+
+    const performanceScore = resolutionScore !== null
+      ? Math.round((0.6 * ticketScore + 0.4 * resolutionScore) * 10) / 10
+      : Math.round(ticketScore * 10) / 10;
+
+    return { ...op, ticketScore, resolutionScore, performanceScore };
   });
 
-  res.json({ ...data, operatives });
+  // Sort by performanceScore desc, tie-break: cumulativeMissions desc
+  scored.sort((a, b) => {
+    if (b.performanceScore !== a.performanceScore) return b.performanceScore - a.performanceScore;
+    return b.cumulativeMissions - a.cumulativeMissions;
+  });
+
+  res.json({ ...data, operatives: scored });
 });
 
 // GET /api/history
@@ -227,6 +270,23 @@ app.get('/api/trends', (req, res) => {
   }
 });
 
+// POST /api/fetch-historical  body: { date: "YYYY-MM-DD" }
+app.post('/api/fetch-historical', express.json(), async (req, res) => {
+  const { date } = req.body || {};
+  if (!date || !/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+    return res.status(400).json({ error: 'Provide date as YYYY-MM-DD in request body' });
+  }
+  console.log(`[server] Historical fetch triggered for ${date}`);
+  try {
+    const result = await fetchDataForDate(date);
+    console.log(`[server] Historical fetch done: ${result.newTickets} new tickets for ${date}`);
+    res.json({ success: true, ...result });
+  } catch (err) {
+    console.error('[server] Historical fetch failed:', err.message);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // POST /api/refresh
 app.post('/api/refresh', async (req, res) => {
   console.log('[server] Manual refresh triggered via POST /api/refresh');
@@ -240,9 +300,9 @@ app.post('/api/refresh', async (req, res) => {
   }
 });
 
-// Schedule daily fetch at 3:30 AM UTC (9:00 AM IST)
-cron.schedule('30 3 * * *', async () => {
-  console.log('[cron] Scheduled fetch triggered at 3:30 AM UTC (9:00 AM IST)');
+// Schedule daily fetch at 3:30 PM UTC (9:00 PM IST)
+cron.schedule('30 15 * * *', async () => {
+  console.log('[cron] Scheduled fetch triggered at 3:30 PM UTC (9:00 PM IST)');
   try {
     await fetchLeaderboardData();
     console.log('[cron] Scheduled fetch completed successfully');

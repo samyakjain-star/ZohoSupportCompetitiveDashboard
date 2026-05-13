@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>OP BOARD | mtap Support</title>
+  <title>Support Leaderboard | mtap Support</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;0,14..32,900;1,14..32,400&display=swap" rel="stylesheet" />
@@ -21,49 +21,69 @@
       </div>
     </div>
     <div class="header-center">
-      <span id="day-counter">DAY — OF OPERATIONS</span>
+      <span id="day-counter">Support Leaderboard</span>
     </div>
     <div class="header-right">
       <span id="last-updated">LAST UPDATED: —</span>
-      <button id="refresh-btn" class="refresh-btn">&#x21BA; REFRESH</button>
+      <button id="refresh-btn" class="refresh-btn">&#x21BA; Refresh</button>
     </div>
   </header>
+
+  <!-- Tab navigation -->
+  <nav class="tab-nav">
+    <button class="tab-btn active" data-tab="today">Today</button>
+    <button class="tab-btn" data-tab="trends">Trends</button>
+  </nav>
 
   <!-- Summary stat cards -->
   <section class="summary-bar">
     <div class="stat-card">
       <div class="stat-value" id="total-missions">—</div>
-      <div class="stat-label">MISSIONS TODAY <span class="orig">(Tickets Closed)</span></div>
+      <div class="stat-label">TOTAL TICKETS</div>
     </div>
     <div class="stat-card">
       <div class="stat-value" id="squad-size">—</div>
-      <div class="stat-label">SQUAD SIZE <span class="orig">(Active Agents)</span></div>
+      <div class="stat-label">ACTIVE TODAY</div>
     </div>
     <div class="stat-card">
       <div class="stat-value" id="squad-leader-name">—</div>
-      <div class="stat-label">SQUAD LEADER <span class="orig">(Top Performer)</span></div>
+      <div class="stat-label">TOP PERFORMER</div>
     </div>
   </section>
 
   <!-- Loading state -->
   <div id="loading" class="loading-overlay">
     <div class="loading-spinner"></div>
-    <div class="loading-text">LOADING MISSION DATA...</div>
+    <div class="loading-text">Loading data...</div>
   </div>
 
   <!-- Error state -->
   <div id="error-state" class="error-state hidden">
     <div class="error-icon">&#x26A0;</div>
-    <div id="error-message">NO MISSION DATA AVAILABLE</div>
-    <button class="refresh-btn retry-btn" id="retry-btn">&#x21BA; RETRY</button>
+    <div id="error-message">No data available</div>
+    <button class="refresh-btn retry-btn" id="retry-btn">&#x21BA; Retry</button>
   </div>
 
   <!-- Main board -->
   <main id="board" class="hidden">
 
+    <!-- Scoring Methodology -->
+    <details class="methodology-box">
+      <summary>ℹ &nbsp;Scoring Methodology</summary>
+      <div class="methodology-body">
+        <p>Rankings are based on a <strong>Performance Score</strong> computed from two metrics. Each agent is scored against the rest of the team (the agent being scored is excluded from the team average, so results are unbiased).</p>
+        <div class="methodology-formula">
+          <div><strong>Ticket Score</strong> <code>= (Agent Tickets ÷ Avg Others' Tickets) × 100</code></div>
+          <div><strong>Resolution Score</strong> <code>= (Avg Others' Res. Time ÷ Agent Res. Time) × 100</code></div>
+          <div><strong>Final Score</strong> <code>= (60% × Ticket Score) + (40% × Resolution Score)</code></div>
+        </div>
+        <p class="methodology-note">A score above 100 means the agent is performing above the team average. Tickets are weighted at 60% (productivity) and resolution time at 40% (speed). Resolution score is inverted so that lower resolution time yields a higher score. Agents with no resolution data are ranked on ticket score alone.</p>
+      </div>
+    </details>
+
     <!-- Podium section (top 3) -->
     <section class="podium-section">
-      <div class="section-label">TOP OPERATIVES <span class="orig">(Top Agents)</span></div>
+      <div class="section-label">Top Performers</div>
       <div class="podium" id="podium">
         <!-- populated by JS -->
       </div>
@@ -71,13 +91,27 @@
 
     <!-- Rest of the board (rank 4+) -->
     <section class="leaderboard-section" id="leaderboard-section">
-      <div class="section-label">FULL ROSTER <span class="orig">(All Agents)</span></div>
+      <div class="section-label">All Agents</div>
       <div class="leaderboard-table" id="leaderboard-table">
         <!-- table rows populated by JS -->
       </div>
     </section>
 
   </main>
+
+  <!-- Trends Tab -->
+  <div id="trends-tab" class="trends-tab hidden">
+    <div class="trends-toolbar">
+      <div class="trends-search-wrap">
+        <svg class="search-icon" width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="6.5" cy="6.5" r="5" stroke="currentColor" stroke-width="1.4"/><path d="M10.5 10.5L13.5 13.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        <input id="trends-search" class="trends-search" type="text" placeholder="Search agent..." autocomplete="off" />
+      </div>
+      <span id="trends-count" class="trends-count"></span>
+    </div>
+    <div id="trends-loading" class="loading-overlay hidden"><div class="loading-spinner"></div>Loading history...</div>
+    <div id="trends-empty" class="trends-empty hidden">No agents match your search.</div>
+    <div id="trends-list" class="trends-list"></div>
+  </div>
 
   <!-- Detail Drawer -->
   <div id="drawer-overlay" class="drawer-overlay hidden"></div>
@@ -96,6 +130,9 @@
       <div class="drawer-tickets" id="drawer-tickets"></div>
     </div>
   </aside>
+
+  <!-- Chart hover tooltip -->
+  <div id="chart-tooltip" class="chart-tooltip hidden"></div>
 
   <script src="app.js"></script>
 </body>

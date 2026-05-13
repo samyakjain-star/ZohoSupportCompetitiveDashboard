@@ -107,6 +107,82 @@ async function fetchClosedTicketsToday(token, todayStart, todayEnd) {
   return tickets;
 }
 
+// Fetch all closed tickets whose closedTime falls within [startUTC, endUTC].
+// Unlike fetchClosedTicketsToday, this paginates until we've passed the range
+// rather than stopping on the first page with no matches.
+async function fetchClosedTicketsForRange(token, startUTC, endUTC) {
+  const tickets = [];
+  let from = 0;
+  const limit = 100;
+
+  while (true) {
+    let resp;
+    try {
+      resp = await makeRequest(`${BASE_URL}/tickets`, { from, limit, status: 'Closed', include: 'assignee' }, token);
+    } catch (err) {
+      if (err.response && err.response.status === 401) {
+        token = await refreshAccessToken();
+        resp = await makeRequest(`${BASE_URL}/tickets`, { from, limit, status: 'Closed', include: 'assignee' }, token);
+      } else {
+        throw err;
+      }
+    }
+
+    const page = resp.data.data || [];
+    if (page.length === 0) break;
+
+    let passedRange = false;
+    for (const ticket of page) {
+      const ct = ticket.closedTime ? new Date(ticket.closedTime).getTime() : null;
+      if (ct && ct >= startUTC && ct <= endUTC) {
+        tickets.push(ticket);
+      } else if (ct && ct < startUTC) {
+        // API returns newest-first; once we're before our range we're done
+        passedRange = true;
+      }
+    }
+
+    if (page.length < limit || passedRange) break;
+    from += limit;
+  }
+
+  return tickets;
+}
+
+function getISTRangeForDate(dateStr) {
+  const [year, month, day] = dateStr.split('-').map(Number);
+  const startIST = new Date(Date.UTC(year, month - 1, day, 0, 0, 0, 0));
+  const endIST   = new Date(Date.UTC(year, month - 1, day, 23, 59, 59, 999));
+  const startUTC = startIST.getTime() - IST_OFFSET_MS;
+  const endUTC   = endIST.getTime()   - IST_OFFSET_MS;
+  return { startUTC, endUTC, dateStr };
+}
+
+async function fetchDataForDate(dateStr) {
+  console.log(`[fetchData] Fetching historical data for ${dateStr}...`);
+  fs.mkdirSync(DATA_DIR, { recursive: true });
+
+  const { startUTC, endUTC } = getISTRangeForDate(dateStr);
+  const token = await getAccessToken();
+  const tickets = await fetchClosedTicketsForRange(token, startUTC, endUTC);
+  console.log(`[fetchData] Found ${tickets.length} closed tickets for ${dateStr}`);
+
+  // Build a minimal operatives list so updateHistory has squad size info
+  const agentIds = new Set();
+  for (const t of tickets) {
+    if (t.assignee?.id) agentIds.add(String(t.assignee.id));
+  }
+  const operatives = [...agentIds].map(id => ({ id, missionsCompleted: 1 }));
+
+  const history   = loadHistory();
+  const fetchedAt = new Date().toISOString();
+  const newTickets = updateHistory(history, tickets, operatives, dateStr, fetchedAt);
+  saveHistory(history);
+
+  console.log(`[fetchData] Historical data for ${dateStr}: ${newTickets} new tickets added`);
+  return { dateStr, ticketsFound: tickets.length, newTickets };
+}
+
 function loadHistory() {
   if (fs.existsSync(HISTORY_PATH)) {
     try {
@@ -348,4 +424,4 @@ if (require.main === module) {
     });
 }
 
-module.exports = { fetchLeaderboardData };
+module.exports = { fetchLeaderboardData, fetchDataForDate };
