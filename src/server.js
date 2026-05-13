@@ -35,13 +35,13 @@ function readLeaderboard() {
 // Serve static files from public/
 app.use(express.static(path.join(__dirname, '../public')));
 
-function assignTierFromCount(c) {
-  if (c >= 20) return { tier: 'Champion',  tierColor: '#00FFB2' };
-  if (c >= 15) return { tier: 'Expert',    tierColor: '#FFB800' };
-  if (c >= 10) return { tier: 'Senior',    tierColor: '#00C9FF' };
-  if (c >= 5)  return { tier: 'Associate', tierColor: '#D1D5DB' };
-  if (c >= 1)  return { tier: 'Junior',    tierColor: '#A78BFA' };
-  return           { tier: 'Inactive',  tierColor: '#FF4C6A' };
+function assignTierFromScore(score) {
+  if (!score || score <= 0) return { tier: 'Inactive',       tierColor: '#FF4C6A' };
+  if (score >= 150)         return { tier: 'Elite',          tierColor: '#E8B84B' };
+  if (score >= 120)         return { tier: 'High Performer', tierColor: '#4ADE80' };
+  if (score >= 100)         return { tier: 'Proficient',     tierColor: '#00C9FF' };
+  if (score >= 80)          return { tier: 'Developing',     tierColor: '#9CA8B5' };
+  return                         { tier: 'Beginner',        tierColor: '#A78BFA' };
 }
 
 function computeCumulativeStats() {
@@ -77,7 +77,7 @@ app.get('/api/leaderboard', (req, res) => {
 
   const cumStats = computeCumulativeStats();
 
-  // Enrich with cumulative data + recompute tier from cumulative count
+  // Enrich with cumulative data (no tier yet — assigned after score computation)
   const operatives = (data.operatives || []).map(op => {
     const cum = cumStats[op.id];
     const cumulativeMissions = cum?.cumulativeMissions ?? op.missionsCompleted;
@@ -85,7 +85,6 @@ app.get('/api/leaderboard', (req, res) => {
       ...op,
       cumulativeMissions,
       cumulativeAvgResolutionMs: cum?.cumulativeAvgResolutionMs ?? null,
-      ...assignTierFromCount(cumulativeMissions),
     };
   });
 
@@ -98,20 +97,20 @@ app.get('/api/leaderboard', (req, res) => {
         cumulativeAvgResolutionMs: cum.cumulativeAvgResolutionMs,
         avgResolutionTimeMs: null, avgFirstResponseTimeMs: null,
         minResolutionTimeMs: null, maxResolutionTimeMs: null,
-        tickets: [], ...assignTierFromCount(cum.cumulativeMissions),
+        tickets: [],
       });
     }
   }
 
-  // Compute performance score for each agent (scored against others, self excluded)
+  // Compute performance score then assign tier from score
   const scored = operatives.map(op => {
     const others = operatives.filter(o => o.id !== op.id && o.cumulativeMissions > 0);
 
     if (op.cumulativeMissions === 0) {
-      return { ...op, ticketScore: 0, resolutionScore: null, performanceScore: 0 };
+      return { ...op, ticketScore: 0, resolutionScore: null, performanceScore: 0, ...assignTierFromScore(0) };
     }
     if (others.length === 0) {
-      return { ...op, ticketScore: 100, resolutionScore: null, performanceScore: 100 };
+      return { ...op, ticketScore: 100, resolutionScore: null, performanceScore: 100, ...assignTierFromScore(100) };
     }
 
     const avgOthersTickets = others.reduce((s, o) => s + o.cumulativeMissions, 0) / others.length;
@@ -130,7 +129,7 @@ app.get('/api/leaderboard', (req, res) => {
       ? Math.round((0.6 * ticketScore + 0.4 * resolutionScore) * 10) / 10
       : Math.round(ticketScore * 10) / 10;
 
-    return { ...op, ticketScore, resolutionScore, performanceScore };
+    return { ...op, ticketScore, resolutionScore, performanceScore, ...assignTierFromScore(performanceScore) };
   });
 
   // Sort by performanceScore desc, tie-break: cumulativeMissions desc
