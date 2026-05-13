@@ -35,13 +35,68 @@ function readLeaderboard() {
 // Serve static files from public/
 app.use(express.static(path.join(__dirname, '../public')));
 
+function computeCumulative() {
+  if (!fs.existsSync(HISTORY_PATH)) return {};
+  try {
+    const history = JSON.parse(fs.readFileSync(HISTORY_PATH, 'utf8'));
+    const totals = {};
+    for (const ticket of Object.values(history.tickets)) {
+      if (!Array.isArray(ticket.assignees) || !ticket.assignees.length) continue;
+      const assignee = ticket.assignees[0];
+      const id = assignee.id;
+      if (!totals[id]) totals[id] = { cumulativeMissions: 0, name: assignee.name };
+      totals[id].cumulativeMissions++;
+    }
+    return totals;
+  } catch { return {}; }
+}
+
 // GET /api/leaderboard
 app.get('/api/leaderboard', (req, res) => {
   const data = readLeaderboard();
   if (!data) {
     return res.status(404).json({ error: 'No data yet', noData: true });
   }
-  res.json(data);
+
+  // Enrich each operative with cumulative all-time missions from history
+  const cumulative = computeCumulative();
+  const operatives = (data.operatives || []).map(op => ({
+    ...op,
+    cumulativeMissions: cumulative[op.id]?.cumulativeMissions ?? op.missionsCompleted,
+  }));
+
+  // Add agents present in history but not in today's data (0 tickets today)
+  for (const [id, cum] of Object.entries(cumulative)) {
+    if (!operatives.find(o => o.id === id)) {
+      const { tier, tierColor } = (() => {
+        const c = cum.cumulativeMissions;
+        if (c >= 20) return { tier: 'Squad Leader', tierColor: '#00FFB2' };
+        if (c >= 15) return { tier: 'Veteran',      tierColor: '#FFB800' };
+        if (c >= 10) return { tier: 'Field Agent',  tierColor: '#00C9FF' };
+        if (c >= 5)  return { tier: 'Recruit',      tierColor: '#D1D5DB' };
+        if (c >= 1)  return { tier: 'Trainee',      tierColor: '#A78BFA' };
+        return           { tier: 'Inactive',     tierColor: '#FF4C6A' };
+      })();
+      operatives.push({
+        id, name: cum.name, missionsCompleted: 0,
+        cumulativeMissions: cum.cumulativeMissions,
+        avgResolutionTimeMs: null, avgFirstResponseTimeMs: null,
+        minResolutionTimeMs: null, maxResolutionTimeMs: null,
+        tickets: [], tier, tierColor,
+      });
+    }
+  }
+
+  // Re-sort by cumulativeMissions desc, tie-break: today's missions desc, then avg res asc
+  operatives.sort((a, b) => {
+    if (b.cumulativeMissions !== a.cumulativeMissions) return b.cumulativeMissions - a.cumulativeMissions;
+    if (b.missionsCompleted !== a.missionsCompleted) return b.missionsCompleted - a.missionsCompleted;
+    if (a.avgResolutionTimeMs === null) return 1;
+    if (b.avgResolutionTimeMs === null) return -1;
+    return a.avgResolutionTimeMs - b.avgResolutionTimeMs;
+  });
+
+  res.json({ ...data, operatives });
 });
 
 // GET /api/history
@@ -107,6 +162,68 @@ app.get('/api/history/agent/:id', (req, res) => {
     res.json({ id: agentId, name: agentName, dailyStats, tickets: agentTickets });
   } catch (err) {
     res.status(500).json({ error: 'Failed to compute agent stats' });
+  }
+});
+
+// GET /api/trends — per-agent daily stats derived from ticket history
+app.get('/api/trends', (req, res) => {
+  if (!fs.existsSync(HISTORY_PATH)) {
+    return res.status(404).json({ error: 'No history yet', noData: true });
+  }
+  try {
+    const history = JSON.parse(fs.readFileSync(HISTORY_PATH, 'utf8'));
+    const tickets = Object.values(history.tickets);
+
+    // Group tickets by agentId → date
+    const agentDayMap = {};
+    const agentNames  = {};
+
+    for (const ticket of tickets) {
+      if (!ticket.dateClosed || !Array.isArray(ticket.assignees) || !ticket.assignees.length) continue;
+      const assignee = ticket.assignees[0];
+      const agentId  = assignee.id;
+      agentNames[agentId] = assignee.name;
+      if (!agentDayMap[agentId]) agentDayMap[agentId] = {};
+      if (!agentDayMap[agentId][ticket.dateClosed]) agentDayMap[agentId][ticket.dateClosed] = [];
+      agentDayMap[agentId][ticket.dateClosed].push(ticket);
+    }
+
+    const agents = Object.entries(agentDayMap).map(([agentId, dayMap]) => {
+      const sortedDates = Object.keys(dayMap).sort();
+
+      const daily = sortedDates.map((date, idx) => {
+        const dayTickets  = dayMap[date];
+        const missions    = dayTickets.length;
+        const resTickets  = dayTickets.filter(t => t.resolutionTimeMs);
+        const avgRes      = resTickets.length
+          ? Math.round(resTickets.reduce((s, t) => s + t.resolutionTimeMs, 0) / resTickets.length)
+          : null;
+        const minRes = resTickets.length ? Math.min(...resTickets.map(t => t.resolutionTimeMs)) : null;
+        const maxRes = resTickets.length ? Math.max(...resTickets.map(t => t.resolutionTimeMs)) : null;
+
+        // Delta vs previous day
+        let deltaM = null, deltaR = null;
+        if (idx > 0) {
+          const prev         = dayMap[sortedDates[idx - 1]];
+          const prevMissions = prev.length;
+          const prevRes      = prev.filter(t => t.resolutionTimeMs);
+          const prevAvgRes   = prevRes.length
+            ? Math.round(prevRes.reduce((s, t) => s + t.resolutionTimeMs, 0) / prevRes.length)
+            : null;
+          deltaM = missions - prevMissions;
+          deltaR = (avgRes && prevAvgRes) ? avgRes - prevAvgRes : null;
+        }
+
+        return { date, missionsCompleted: missions, avgResolutionTimeMs: avgRes, minResolutionTimeMs: minRes, maxResolutionTimeMs: maxRes, deltaM, deltaR };
+      });
+
+      return { id: agentId, name: agentNames[agentId], daysTracked: sortedDates.length, daily: daily.reverse() };
+    });
+
+    agents.sort((a, b) => a.name.localeCompare(b.name));
+    res.json(agents);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to compute trends' });
   }
 });
 

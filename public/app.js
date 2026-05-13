@@ -103,16 +103,19 @@ function renderPodium(top3, allOperatives) {
 
     const card = document.createElement('div');
     card.className = `podium-card ${cardClass}`;
+    const todayBadge = op.missionsCompleted > 0
+      ? `<span class="today-badge">+${op.missionsCompleted} today</span>` : '';
     card.innerHTML = `
       <div class="podium-card-inner">
         <div class="podium-rank">${rankNum}</div>
         <div class="podium-name">${escapeHtml(op.name)}</div>
         <div class="podium-count-wrap">
-          <div class="podium-count">${op.missionsCompleted}</div>
+          <div class="podium-count">${op.cumulativeMissions ?? op.missionsCompleted}</div>
           <div class="podium-count-label">
-            Missions
-            <span class="orig">(Tickets Closed)</span>
+            Total Missions
+            <span class="orig">(All-time Tickets)</span>
           </div>
+          ${todayBadge}
         </div>
         <div class="podium-tier">${getTierBadge(op.tier, op.tierColor)}</div>
         <div class="podium-res-pill">
@@ -148,6 +151,9 @@ function renderTable(rest, offset, allOperatives) {
     const row = document.createElement('div');
     row.className = `leaderboard-row${isInactive ? ' inactive' : ''}`;
     row.style.animationDelay = `${Math.min(idx * 0.03, 0.6)}s`;
+    const cumTotal = op.cumulativeMissions ?? op.missionsCompleted;
+    const todayLabel = op.missionsCompleted > 0
+      ? `<span class="today-badge">+${op.missionsCompleted} today</span>` : '';
     row.innerHTML = `
       ${rankHtml}
       <div class="row-info">
@@ -155,8 +161,8 @@ function renderTable(rest, offset, allOperatives) {
         <div class="row-tier-wrap">${getTierBadge(op.tier, op.tierColor)}</div>
       </div>
       <div class="row-missions-wrap">
-        <div class="row-missions">${op.missionsCompleted}</div>
-        <div class="row-missions-label">Missions <span class="orig">(Closed)</span></div>
+        <div class="row-missions">${cumTotal}</div>
+        <div class="row-missions-label">Total <span class="orig">(All-time)</span> ${todayLabel}</div>
       </div>
       <div class="row-stats">
         ${resPill || '<span class="stat-pill">—</span>'}
@@ -174,7 +180,8 @@ function renderBoard(data) {
   currentData = data;
   const operatives = data.operatives || [];
 
-  elTotalMissions.textContent = data.totalMissions ?? '0';
+  const cumTotal = operatives.reduce((s, op) => s + (op.cumulativeMissions ?? op.missionsCompleted), 0);
+  elTotalMissions.textContent = cumTotal || data.totalMissions || '0';
   elSquadSize.textContent     = data.squadSize ?? '0';
 
   const leader = operatives.find(op => op.missionsCompleted > 0);
