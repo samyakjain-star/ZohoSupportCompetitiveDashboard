@@ -1,415 +1,72 @@
 {
-  "lastUpdated": "2026-05-12T17:35:25.542Z",
-  "date": "2026-05-12",
-  "dayNumber": 1,
-  "totalMissions": 52,
-  "squadSize": 18,
+  "lastUpdated": "2026-05-15T06:25:51.640Z",
+  "date": "2026-05-15",
+  "dayNumber": 4,
+  "totalMissions": 6,
+  "squadSize": 5,
   "operatives": [
-    {
-      "id": "3988000015979151",
-      "name": "ADIL SAYED",
-      "missionsCompleted": 8,
-      "avgResolutionTimeMs": 143129875,
-      "avgFirstResponseTimeMs": null,
-      "minResolutionTimeMs": 3089000,
-      "maxResolutionTimeMs": 515754000,
-      "tickets": [
-        {
-          "id": "3988000048551511",
-          "ticketNumber": "65142",
-          "subject": "Maker checker config",
-          "resolutionTimeMs": 3089000,
-          "closedTime": "2026-05-12T08:32:49.000Z"
-        },
-        {
-          "id": "3988000048573190",
-          "ticketNumber": "65184",
-          "subject": "Vehicle Reaching Time is Missing in Trip Report",
-          "resolutionTimeMs": 4125000,
-          "closedTime": "2026-05-12T15:45:29.000Z"
-        },
-        {
-          "id": "3988000048565077",
-          "ticketNumber": "65119",
-          "subject": "Checklist report data issue",
-          "resolutionTimeMs": 6817000,
-          "closedTime": "2026-05-12T05:40:51.000Z"
-        },
-        {
-          "id": "3988000048565005",
-          "ticketNumber": "65110",
-          "subject": "Screenrecord/screenshot for flutter app",
-          "resolutionTimeMs": 49635000,
-          "closedTime": "2026-05-12T04:23:56.000Z"
-        },
-        {
-          "id": "3988000048546017",
-          "ticketNumber": "65077",
-          "subject": "Locality data issue - Employee profile",
-          "resolutionTimeMs": 103703000,
-          "closedTime": "2026-05-12T13:31:05.000Z"
-        },
-        {
-          "id": "3988000048500001",
-          "ticketNumber": "65049",
-          "subject": "Special case query",
-          "resolutionTimeMs": 111455000,
-          "closedTime": "2026-05-12T10:25:47.000Z"
-        },
-        {
-          "id": "3988000048432001",
-          "ticketNumber": "64966",
-          "subject": "WNS Checklist & Escort Config Update",
-          "resolutionTimeMs": 350461000,
-          "closedTime": "2026-05-12T05:41:03.000Z"
-        },
-        {
-          "id": "3988000048335283",
-          "ticketNumber": "64886",
-          "subject": "Config Request - On 8th May 2026",
-          "resolutionTimeMs": 515754000,
-          "closedTime": "2026-05-12T05:41:44.000Z"
-        }
-      ],
-      "tier": "Recruit",
-      "tierColor": "#D1D5DB"
-    },
     {
       "id": "3988000015631127",
       "name": "SANTHOSH SURENDRAN",
-      "missionsCompleted": 6,
-      "avgResolutionTimeMs": 2439793833,
-      "avgFirstResponseTimeMs": null,
-      "minResolutionTimeMs": 12243000,
-      "maxResolutionTimeMs": 9008578000,
-      "tickets": [
-        {
-          "id": "3988000048536431",
-          "ticketNumber": "65133",
-          "subject": "PRR Cabs - Kindly create the new site and new office",
-          "resolutionTimeMs": 12243000,
-          "closedTime": "2026-05-12T09:55:33.000Z"
-        },
-        {
-          "id": "3988000048574017",
-          "ticketNumber": "65113",
-          "subject": "Request to Update Self Roster Status",
-          "resolutionTimeMs": 12927000,
-          "closedTime": "2026-05-12T01:03:59.000Z"
-        },
-        {
-          "id": "3988000048569081",
-          "ticketNumber": "65094",
-          "subject": "Guidehouse - Kindly update the configurations for Guidehouse Chennai & Guidehouse Chennai Keppel site only",
-          "resolutionTimeMs": 53730000,
-          "closedTime": "2026-05-12T01:54:31.000Z"
-        },
-        {
-          "id": "3988000048554255",
-          "ticketNumber": "65111",
-          "subject": "Guidehouse - Kindly inactive the vehicles",
-          "resolutionTimeMs": 67349000,
-          "closedTime": "2026-05-12T11:54:43.000Z"
-        },
-        {
-          "id": "3988000046773001",
-          "ticketNumber": "62926",
-          "subject": "CHN Facility Request to Update Employee Joining Dates in Safetrax tool",
-          "resolutionTimeMs": 5483936000,
-          "closedTime": "2026-05-12T06:25:02.000Z"
-        },
-        {
-          "id": "3988000045707003",
-          "ticketNumber": "61513",
-          "subject": "CHN Facility- Request to Update Official Email ID in Safetrax Tool",
-          "resolutionTimeMs": 9008578000,
-          "closedTime": "2026-05-12T06:25:00.000Z"
-        }
-      ],
-      "tier": "Recruit",
-      "tierColor": "#D1D5DB"
-    },
-    {
-      "id": "3988000000050191",
-      "name": "BUTCHI P",
-      "missionsCompleted": 5,
-      "avgResolutionTimeMs": 153355200,
-      "avgFirstResponseTimeMs": null,
-      "minResolutionTimeMs": 31031000,
-      "maxResolutionTimeMs": 602573000,
-      "tickets": [
-        {
-          "id": "3988000048557140",
-          "ticketNumber": "65115",
-          "subject": "Remittance Advice",
-          "resolutionTimeMs": 31031000,
-          "closedTime": "2026-05-12T06:11:55.000Z"
-        },
-        {
-          "id": "3988000048576060",
-          "ticketNumber": "65114",
-          "subject": "Remittance Advice",
-          "resolutionTimeMs": 31045000,
-          "closedTime": "2026-05-12T06:12:08.000Z"
-        },
-        {
-          "id": "3988000048567026",
-          "ticketNumber": "65112",
-          "subject": "\"Server\" space mention - @MTAP Support Can any...",
-          "resolutionTimeMs": 44211000,
-          "closedTime": "2026-05-12T06:12:23.000Z"
-        },
-        {
-          "id": "3988000048544043",
-          "ticketNumber": "65107",
-          "subject": "RE: safetrax and commuter transport booking issue",
-          "resolutionTimeMs": 57916000,
-          "closedTime": "2026-05-12T06:12:50.000Z"
-        },
-        {
-          "id": "3988000048256854",
-          "ticketNumber": "64837",
-          "subject": "Request to Close Shell Production and Staging Instances",
-          "resolutionTimeMs": 602573000,
-          "closedTime": "2026-05-12T06:03:54.000Z"
-        }
-      ],
-      "tier": "Recruit",
-      "tierColor": "#D1D5DB"
-    },
-    {
-      "id": "3988000046450859",
-      "name": "DEEPAK ARJUN",
-      "missionsCompleted": 5,
-      "avgResolutionTimeMs": 260046600,
-      "avgFirstResponseTimeMs": null,
-      "minResolutionTimeMs": 9185000,
-      "maxResolutionTimeMs": 629931000,
-      "tickets": [
-        {
-          "id": "3988000048566073",
-          "ticketNumber": "65158",
-          "subject": "Clarification Required on Vendor and Cab Details Mismatch",
-          "resolutionTimeMs": 9185000,
-          "closedTime": "2026-05-12T12:45:04.000Z"
-        },
-        {
-          "id": "3988000048572155",
-          "ticketNumber": "65144",
-          "subject": "Issue Downloading Shiftwise Trip Report",
-          "resolutionTimeMs": 9664000,
-          "closedTime": "2026-05-12T10:36:53.000Z"
-        },
-        {
-          "id": "3988000048433089",
-          "ticketNumber": "65012",
-          "subject": "Delay in Auto-Generated Emails",
-          "resolutionTimeMs": 325428000,
-          "closedTime": "2026-05-12T04:38:07.000Z"
-        },
-        {
-          "id": "3988000048437127",
-          "ticketNumber": "65011",
-          "subject": "Delay in Auto-Triggered Emails – Immediate Attention Required",
-          "resolutionTimeMs": 326025000,
-          "closedTime": "2026-05-12T04:37:45.000Z"
-        },
-        {
-          "id": "3988000048315174",
-          "ticketNumber": "64832",
-          "subject": "We are unable to generate the billing report - westpharma.",
-          "resolutionTimeMs": 629931000,
-          "closedTime": "2026-05-12T12:44:34.000Z"
-        }
-      ],
-      "tier": "Recruit",
-      "tierColor": "#D1D5DB"
-    },
-    {
-      "id": "3988000017265073",
-      "name": "THINESH S",
-      "missionsCompleted": 4,
-      "avgResolutionTimeMs": 190889000,
-      "avgFirstResponseTimeMs": null,
-      "minResolutionTimeMs": 82027000,
-      "maxResolutionTimeMs": 345228000,
-      "tickets": [
-        {
-          "id": "3988000048536001",
-          "ticketNumber": "65074",
-          "subject": "Data Request - Distance between Home and Nodal points for Employees - RCH Service",
-          "resolutionTimeMs": 82027000,
-          "closedTime": "2026-05-12T06:39:58.000Z"
-        },
-        {
-          "id": "3988000048513005",
-          "ticketNumber": "65072",
-          "subject": "Kindly add office buffer for logout as 15 minutes - RCH Service",
-          "resolutionTimeMs": 85800000,
-          "closedTime": "2026-05-12T07:23:35.000Z"
-        },
-        {
-          "id": "3988000048399311",
-          "ticketNumber": "65036",
-          "subject": "modify trip edit and trip confirmation edit cut off for admins as 15 days ",
-          "resolutionTimeMs": 250501000,
-          "closedTime": "2026-05-12T06:39:31.000Z"
-        },
-        {
-          "id": "3988000048397157",
-          "ticketNumber": "64979",
-          "subject": "Kindly give access for the mentioned site for theshared ids",
-          "resolutionTimeMs": 345228000,
-          "closedTime": "2026-05-12T06:39:12.000Z"
-        }
-      ],
-      "tier": "Trainee",
-      "tierColor": "#A78BFA"
-    },
-    {
-      "id": "3988000015979187",
-      "name": "SWAMI SHEKHAR",
-      "missionsCompleted": 3,
-      "avgResolutionTimeMs": 65628333,
-      "avgFirstResponseTimeMs": null,
-      "minResolutionTimeMs": 8025000,
-      "maxResolutionTimeMs": 102431000,
-      "tickets": [
-        {
-          "id": "3988000048565151",
-          "ticketNumber": "65140",
-          "subject": "Please enable config so employee and admin can roster for different office",
-          "resolutionTimeMs": 8025000,
-          "closedTime": "2026-05-12T09:32:56.000Z"
-        },
-        {
-          "id": "3988000048569247",
-          "ticketNumber": "65106",
-          "subject": "Please insert logo as mentioned",
-          "resolutionTimeMs": 86429000,
-          "closedTime": "2026-05-12T14:01:47.000Z"
-        },
-        {
-          "id": "3988000048568001",
-          "ticketNumber": "65083",
-          "subject": "Please enable the config as mentioned",
-          "resolutionTimeMs": 102431000,
-          "closedTime": "2026-05-12T14:02:24.000Z"
-        }
-      ],
-      "tier": "Trainee",
-      "tierColor": "#A78BFA"
-    },
-    {
-      "id": "3988000029723001",
-      "name": "SRIKANT SAHU",
-      "missionsCompleted": 3,
-      "avgResolutionTimeMs": 329023000,
-      "avgFirstResponseTimeMs": null,
-      "minResolutionTimeMs": 13745000,
-      "maxResolutionTimeMs": 618952000,
-      "tickets": [
-        {
-          "id": "3988000048536336",
-          "ticketNumber": "65123",
-          "subject": "GIA: No Data in Speed Violation Report",
-          "resolutionTimeMs": 13745000,
-          "closedTime": "2026-05-12T08:15:33.000Z"
-        },
-        {
-          "id": "3988000048398093",
-          "ticketNumber": "64976",
-          "subject": "SitusAMC - New site creation under app.safetrax.in",
-          "resolutionTimeMs": 354372000,
-          "closedTime": "2026-05-12T08:15:13.000Z"
-        },
-        {
-          "id": "3988000048299315",
-          "ticketNumber": "64826",
-          "subject": "Please enable Auto Alight and Auto No Show config",
-          "resolutionTimeMs": 618952000,
-          "closedTime": "2026-05-12T08:15:01.000Z"
-        }
-      ],
-      "tier": "Trainee",
-      "tierColor": "#A78BFA"
-    },
-    {
-      "id": "3988000024892155",
-      "name": "ZAKIR QURESHI",
       "missionsCompleted": 2,
-      "avgResolutionTimeMs": 29547500,
+      "avgResolutionTimeMs": 86800500,
       "avgFirstResponseTimeMs": null,
-      "minResolutionTimeMs": 8339000,
-      "maxResolutionTimeMs": 50756000,
+      "minResolutionTimeMs": 23569000,
+      "maxResolutionTimeMs": 150032000,
       "tickets": [
         {
-          "id": "3988000048546563",
-          "ticketNumber": "65166",
-          "subject": "Enhancor TTT : Please Add Mentioned Vehilce Details In Vehicle Profile",
-          "resolutionTimeMs": 8339000,
-          "closedTime": "2026-05-12T14:25:15.000Z"
+          "id": "3988000048557850",
+          "ticketNumber": "65374",
+          "subject": "\"Implementation\" space mention - @MTAP Support Need yo...",
+          "resolutionTimeMs": 23569000,
+          "closedTime": "2026-05-15T04:27:00.000Z"
         },
         {
-          "id": "3988000048546175",
-          "ticketNumber": "65105",
-          "subject": "Rehlko : Please Reset Employee Id Password",
-          "resolutionTimeMs": 50756000,
-          "closedTime": "2026-05-12T03:59:28.000Z"
+          "id": "3988000048604056",
+          "ticketNumber": "65258",
+          "subject": "Groupon - Unable to change office ",
+          "resolutionTimeMs": 150032000,
+          "closedTime": "2026-05-15T04:50:39.000Z"
         }
       ],
       "tier": "Trainee",
       "tierColor": "#A78BFA"
     },
     {
-      "id": "3988000022631352",
-      "name": "AKSHAY SINGH",
-      "missionsCompleted": 2,
-      "avgResolutionTimeMs": 64284500,
+      "id": "3988000047218380",
+      "name": "ARUN V",
+      "missionsCompleted": 1,
+      "avgResolutionTimeMs": 5593000,
       "avgFirstResponseTimeMs": null,
-      "minResolutionTimeMs": 59372000,
-      "maxResolutionTimeMs": 69197000,
+      "minResolutionTimeMs": 5593000,
+      "maxResolutionTimeMs": 5593000,
       "tickets": [
         {
-          "id": "3988000048558249",
-          "ticketNumber": "65109",
-          "subject": "Aml : remove blacklisted",
-          "resolutionTimeMs": 59372000,
-          "closedTime": "2026-05-12T06:58:38.000Z"
-        },
-        {
-          "id": "3988000048560231",
-          "ticketNumber": "65099",
-          "subject": "SSNC : Office change",
-          "resolutionTimeMs": 69197000,
-          "closedTime": "2026-05-12T06:58:41.000Z"
+          "id": "3988000048568679",
+          "ticketNumber": "65378",
+          "subject": "SUPER OPS - Kindly enable this configuration",
+          "resolutionTimeMs": 5593000,
+          "closedTime": "2026-05-15T06:12:33.000Z"
         }
       ],
       "tier": "Trainee",
       "tierColor": "#A78BFA"
     },
     {
-      "id": "3988000019940246",
-      "name": "VISHAL VISHWAKARMA",
-      "missionsCompleted": 2,
-      "avgResolutionTimeMs": 177023500,
+      "id": "3988000015979151",
+      "name": "ADIL SAYED",
+      "missionsCompleted": 1,
+      "avgResolutionTimeMs": 57609000,
       "avgFirstResponseTimeMs": null,
-      "minResolutionTimeMs": 5145000,
-      "maxResolutionTimeMs": 348902000,
+      "minResolutionTimeMs": 57609000,
+      "maxResolutionTimeMs": 57609000,
       "tickets": [
         {
-          "id": "3988000048554508",
-          "ticketNumber": "65167",
-          "subject": "Clear routing JOB",
-          "resolutionTimeMs": 5145000,
-          "closedTime": "2026-05-12T13:32:59.000Z"
-        },
-        {
-          "id": "3988000048446088",
-          "ticketNumber": "65017",
-          "subject": "Issue : not able to move employee or delete employee from trip",
-          "resolutionTimeMs": 348902000,
-          "closedTime": "2026-05-12T12:01:35.000Z"
+          "id": "3988000048620078",
+          "ticketNumber": "65367",
+          "subject": "All no show and cancelled trip config",
+          "resolutionTimeMs": 57609000,
+          "closedTime": "2026-05-15T06:13:45.000Z"
         }
       ],
       "tier": "Trainee",
@@ -418,25 +75,18 @@
     {
       "id": "3988000000501556",
       "name": "PRASHANT BABURAO",
-      "missionsCompleted": 2,
-      "avgResolutionTimeMs": 257845500,
+      "missionsCompleted": 1,
+      "avgResolutionTimeMs": 81529000,
       "avgFirstResponseTimeMs": null,
-      "minResolutionTimeMs": 74634000,
-      "maxResolutionTimeMs": 441057000,
+      "minResolutionTimeMs": 81529000,
+      "maxResolutionTimeMs": 81529000,
       "tickets": [
         {
-          "id": "3988000048560001",
-          "ticketNumber": "65079",
-          "subject": "MDI NetworX - Enable Confirmations when Trip is Active",
-          "resolutionTimeMs": 74634000,
-          "closedTime": "2026-05-12T05:54:27.000Z"
-        },
-        {
-          "id": "3988000048343633",
-          "ticketNumber": "64948",
-          "subject": "FPS Innovation  -  Config Update request",
-          "resolutionTimeMs": 441057000,
-          "closedTime": "2026-05-12T12:20:40.000Z"
+          "id": "3988000048576451",
+          "ticketNumber": "65310",
+          "subject": "RE: Issue with SafeTrax Cab Arrival Notifications.",
+          "resolutionTimeMs": 81529000,
+          "closedTime": "2026-05-15T05:26:51.000Z"
         }
       ],
       "tier": "Trainee",
@@ -445,159 +95,18 @@
     {
       "id": "3988000021288181",
       "name": "ANILKUMAR GUDE",
-      "missionsCompleted": 2,
-      "avgResolutionTimeMs": 274016000,
-      "avgFirstResponseTimeMs": null,
-      "minResolutionTimeMs": 102940000,
-      "maxResolutionTimeMs": 445092000,
-      "tickets": [
-        {
-          "id": "3988000048500301",
-          "ticketNumber": "65071",
-          "subject": "Feedback email",
-          "resolutionTimeMs": 102940000,
-          "closedTime": "2026-05-12T11:49:31.000Z"
-        },
-        {
-          "id": "3988000048353062",
-          "ticketNumber": "64929",
-          "subject": "Configs",
-          "resolutionTimeMs": 445092000,
-          "closedTime": "2026-05-12T09:41:01.000Z"
-        }
-      ],
-      "tier": "Trainee",
-      "tierColor": "#A78BFA"
-    },
-    {
-      "id": "3988000006613001",
-      "name": "AMIT WANI",
-      "missionsCompleted": 2,
-      "avgResolutionTimeMs": 360400500,
-      "avgFirstResponseTimeMs": null,
-      "minResolutionTimeMs": 12472000,
-      "maxResolutionTimeMs": 708329000,
-      "tickets": [
-        {
-          "id": "3988000048563103",
-          "ticketNumber": "65152",
-          "subject": "Medtronics: Please enable the Trip SMS for employees",
-          "resolutionTimeMs": 12472000,
-          "closedTime": "2026-05-12T12:53:47.000Z"
-        },
-        {
-          "id": "3988000048293486",
-          "ticketNumber": "64797",
-          "subject": "Maersk: Vehicle and Driver Compliance document View and Download concern",
-          "resolutionTimeMs": 708329000,
-          "closedTime": "2026-05-12T12:33:49.000Z"
-        }
-      ],
-      "tier": "Trainee",
-      "tierColor": "#A78BFA"
-    },
-    {
-      "id": "3988000014411455",
-      "name": "AMOL CHAUDHARI",
-      "missionsCompleted": 2,
-      "avgResolutionTimeMs": 616313000,
-      "avgFirstResponseTimeMs": null,
-      "minResolutionTimeMs": 24233000,
-      "maxResolutionTimeMs": 1208393000,
-      "tickets": [
-        {
-          "id": "3988000048565225",
-          "ticketNumber": "65143",
-          "subject": "Smith & Nephew: Enable the below configuration",
-          "resolutionTimeMs": 24233000,
-          "closedTime": "2026-05-12T14:35:44.000Z"
-        },
-        {
-          "id": "3988000048156671",
-          "ticketNumber": "64655",
-          "subject": "WNS: Please implement new billing logic",
-          "resolutionTimeMs": 1208393000,
-          "closedTime": "2026-05-12T07:53:22.000Z"
-        }
-      ],
-      "tier": "Trainee",
-      "tierColor": "#A78BFA"
-    },
-    {
-      "id": "3988000032593082",
-      "name": "RAMDASHEMANT PAI",
       "missionsCompleted": 1,
-      "avgResolutionTimeMs": 13391000,
+      "avgResolutionTimeMs": 149180000,
       "avgFirstResponseTimeMs": null,
-      "minResolutionTimeMs": 13391000,
-      "maxResolutionTimeMs": 13391000,
+      "minResolutionTimeMs": 149180000,
+      "maxResolutionTimeMs": 149180000,
       "tickets": [
         {
-          "id": "3988000048560303",
-          "ticketNumber": "65125",
-          "subject": "Request to modify the trip end buffer time login & logout - BCE Global Tech",
-          "resolutionTimeMs": 13391000,
-          "closedTime": "2026-05-12T08:53:07.000Z"
-        }
-      ],
-      "tier": "Trainee",
-      "tierColor": "#A78BFA"
-    },
-    {
-      "id": "3988000006770001",
-      "name": "SIDDHARTH",
-      "missionsCompleted": 1,
-      "avgResolutionTimeMs": 79036000,
-      "avgFirstResponseTimeMs": null,
-      "minResolutionTimeMs": 79036000,
-      "maxResolutionTimeMs": 79036000,
-      "tickets": [
-        {
-          "id": "3988000048554173",
-          "ticketNumber": "65096",
-          "subject": "Please update the stoppage geofence to 200 meters in tsrs.safebus.io",
-          "resolutionTimeMs": 79036000,
-          "closedTime": "2026-05-12T09:09:14.000Z"
-        }
-      ],
-      "tier": "Trainee",
-      "tierColor": "#A78BFA"
-    },
-    {
-      "id": "3988000039153814",
-      "name": "NAVEEN KUMAR",
-      "missionsCompleted": 1,
-      "avgResolutionTimeMs": 93176000,
-      "avgFirstResponseTimeMs": null,
-      "minResolutionTimeMs": 93176000,
-      "maxResolutionTimeMs": 93176000,
-      "tickets": [
-        {
-          "id": "3988000048504001",
-          "ticketNumber": "65056",
-          "subject": "reset password request",
-          "resolutionTimeMs": 93176000,
-          "closedTime": "2026-05-12T06:30:47.000Z"
-        }
-      ],
-      "tier": "Trainee",
-      "tierColor": "#A78BFA"
-    },
-    {
-      "id": "3988000034047053",
-      "name": "VAIBHAV RAGHAV",
-      "missionsCompleted": 1,
-      "avgResolutionTimeMs": 397310000,
-      "avgFirstResponseTimeMs": null,
-      "minResolutionTimeMs": 397310000,
-      "maxResolutionTimeMs": 397310000,
-      "tickets": [
-        {
-          "id": "3988000048407001",
-          "ticketNumber": "64963",
-          "subject": "Zomato Billing - April 2026",
-          "resolutionTimeMs": 397310000,
-          "closedTime": "2026-05-12T04:18:39.000Z"
+          "id": "3988000048572432",
+          "ticketNumber": "65256",
+          "subject": "Billing Report changes",
+          "resolutionTimeMs": 149180000,
+          "closedTime": "2026-05-15T04:09:52.000Z"
         }
       ],
       "tier": "Trainee",

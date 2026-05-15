@@ -1,18 +1,16 @@
 const path = require('path');
-const fs = require('fs');
 const express = require('express');
 const cron = require('node-cron');
 require('dotenv').config({ path: path.join(__dirname, '../.env') });
 
 const { fetchLeaderboardData, fetchDataForDate } = require('./fetchData');
+const db = require('./db');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const LEADERBOARD_PATH = path.join(__dirname, '../data/leaderboard.json');
-const HISTORY_PATH     = path.join(__dirname, '../data/history.json');
 
-// IST offset: UTC+5:30
-const IST_OFFSET_MS = 5.5 * 60 * 60 * 1000;
+const IST_OFFSET_MS  = 5.5 * 60 * 60 * 1000;
+const LAUNCH_DATE_MS = new Date('2026-05-12T00:00:00.000Z').getTime();
 
 function getTodayISTDateString() {
   const nowIST = Date.now() + IST_OFFSET_MS;
@@ -23,13 +21,62 @@ function getTodayISTDateString() {
   return `${year}-${month}-${day}`;
 }
 
-function readLeaderboard() {
-  if (!fs.existsSync(LEADERBOARD_PATH)) return null;
-  try {
-    return JSON.parse(fs.readFileSync(LEADERBOARD_PATH, 'utf8'));
-  } catch {
-    return null;
+function getDayNumber() {
+  return Math.max(1, Math.floor((Date.now() - LAUNCH_DATE_MS) / 86_400_000) + 1);
+}
+
+// Build today's leaderboard snapshot from all tickets in the DB.
+// Replaces the leaderboard.json that fetchData.js used to write.
+async function buildLeaderboardFromDb() {
+  const tickets = await db.loadAllTickets();
+  const todayStr = getTodayISTDateString();
+
+  const todayStats = {};
+  const todayNames = {};
+  for (const t of tickets) {
+    if (t.dateClosed !== todayStr) continue;
+    if (!Array.isArray(t.assignees) || !t.assignees.length) continue;
+    const a = t.assignees[0];
+    todayNames[a.id] = a.name;
+    if (!todayStats[a.id]) {
+      todayStats[a.id] = { count: 0, totalRes: 0, resCount: 0, min: null, max: null, list: [] };
+    }
+    const s = todayStats[a.id];
+    s.count++;
+    if (t.resolutionTimeMs) {
+      s.totalRes += t.resolutionTimeMs;
+      s.resCount++;
+      if (s.min === null || t.resolutionTimeMs < s.min) s.min = t.resolutionTimeMs;
+      if (s.max === null || t.resolutionTimeMs > s.max) s.max = t.resolutionTimeMs;
+      s.list.push({
+        id: t.id,
+        ticketNumber: t.ticketNumber,
+        subject: t.subject,
+        resolutionTimeMs: t.resolutionTimeMs,
+        closedTime: t.closedTime,
+      });
+    }
   }
+
+  const operatives = Object.entries(todayStats).map(([id, s]) => ({
+    id,
+    name: todayNames[id],
+    missionsCompleted: s.count,
+    avgResolutionTimeMs: s.resCount > 0 ? Math.round(s.totalRes / s.resCount) : null,
+    avgFirstResponseTimeMs: null,
+    minResolutionTimeMs: s.min,
+    maxResolutionTimeMs: s.max,
+    tickets: s.list.sort((a, b) => a.resolutionTimeMs - b.resolutionTimeMs),
+  }));
+
+  return {
+    lastUpdated:   new Date().toISOString(),
+    date:          todayStr,
+    dayNumber:     getDayNumber(),
+    totalMissions: operatives.reduce((sum, o) => sum + o.missionsCompleted, 0),
+    squadSize:     operatives.filter(o => o.missionsCompleted > 0).length,
+    operatives,
+  };
 }
 
 // Serve static files from public/
@@ -49,38 +96,35 @@ function assignTierByRank(rank, totalActive) {
 
 const INACTIVE_TIER = { tier: 'Inactive', tierColor: '#FF4C6A' };
 
-function computeCumulativeStats() {
-  if (!fs.existsSync(HISTORY_PATH)) return {};
-  try {
-    const history = JSON.parse(fs.readFileSync(HISTORY_PATH, 'utf8'));
-    const stats = {};
-    for (const ticket of Object.values(history.tickets)) {
-      if (!Array.isArray(ticket.assignees) || !ticket.assignees.length) continue;
-      const assignee = ticket.assignees[0];
-      const id = assignee.id;
-      if (!stats[id]) stats[id] = { count: 0, name: assignee.name, totalResMs: 0, resCount: 0 };
-      stats[id].count++;
-      if (ticket.resolutionTimeMs) {
-        stats[id].totalResMs += ticket.resolutionTimeMs;
-        stats[id].resCount++;
-      }
+async function computeCumulativeStats() {
+  const tickets = await db.loadAllTickets();
+  const stats = {};
+  for (const ticket of tickets) {
+    if (!Array.isArray(ticket.assignees) || !ticket.assignees.length) continue;
+    const assignee = ticket.assignees[0];
+    const id = assignee.id;
+    if (!stats[id]) stats[id] = { count: 0, name: assignee.name, totalResMs: 0, resCount: 0 };
+    stats[id].count++;
+    if (ticket.resolutionTimeMs) {
+      stats[id].totalResMs += ticket.resolutionTimeMs;
+      stats[id].resCount++;
     }
-    for (const s of Object.values(stats)) {
-      s.cumulativeMissions = s.count;
-      s.cumulativeAvgResolutionMs = s.resCount > 0 ? Math.round(s.totalResMs / s.resCount) : null;
-    }
-    return stats;
-  } catch { return {}; }
+  }
+  for (const s of Object.values(stats)) {
+    s.cumulativeMissions = s.count;
+    s.cumulativeAvgResolutionMs = s.resCount > 0 ? Math.round(s.totalResMs / s.resCount) : null;
+  }
+  return stats;
 }
 
 // GET /api/leaderboard
-app.get('/api/leaderboard', (req, res) => {
-  const data = readLeaderboard();
-  if (!data) {
-    return res.status(404).json({ error: 'No data yet', noData: true });
-  }
-
-  const cumStats = computeCumulativeStats();
+app.get('/api/leaderboard', async (req, res) => {
+  try {
+    const data = await buildLeaderboardFromDb();
+    const cumStats = await computeCumulativeStats();
+    if (data.operatives.length === 0 && Object.keys(cumStats).length === 0) {
+      return res.status(404).json({ error: 'No data yet', noData: true });
+    }
 
   // Enrich with cumulative data (no tier yet — assigned after score computation)
   const operatives = (data.operatives || []).map(op => {
@@ -152,30 +196,29 @@ app.get('/api/leaderboard', (req, res) => {
     return { ...op, ...assignTierByRank(activeRank, activeCount) };
   });
 
-  res.json({ ...data, operatives: final });
+    res.json({ ...data, operatives: final });
+  } catch (err) {
+    console.error('[server] /api/leaderboard error:', err.message);
+    res.status(500).json({ error: 'Failed to build leaderboard: ' + err.message });
+  }
 });
 
 // GET /api/history
-app.get('/api/history', (req, res) => {
-  if (!fs.existsSync(HISTORY_PATH)) {
-    return res.status(404).json({ error: 'No history yet', noData: true });
-  }
+app.get('/api/history', async (req, res) => {
   try {
-    const data = JSON.parse(fs.readFileSync(HISTORY_PATH, 'utf8'));
+    const data = await db.loadHistoryShape();
     res.json(data);
-  } catch {
+  } catch (err) {
+    console.error('[server] /api/history error:', err.message);
     res.status(500).json({ error: 'Failed to read history' });
   }
 });
 
 // GET /api/history/agent/:id — derive all-time stats from ticket logs
-app.get('/api/history/agent/:id', (req, res) => {
-  if (!fs.existsSync(HISTORY_PATH)) {
-    return res.status(404).json({ error: 'No history yet' });
-  }
+app.get('/api/history/agent/:id', async (req, res) => {
   try {
     const agentId = req.params.id;
-    const history = JSON.parse(fs.readFileSync(HISTORY_PATH, 'utf8'));
+    const history = await db.loadHistoryShape();
 
     // Find all tickets where this agent appears as an assignee
     const agentTickets = Object.values(history.tickets).filter(t =>
@@ -222,13 +265,9 @@ app.get('/api/history/agent/:id', (req, res) => {
 });
 
 // GET /api/trends — per-agent daily stats derived from ticket history
-app.get('/api/trends', (req, res) => {
-  if (!fs.existsSync(HISTORY_PATH)) {
-    return res.status(404).json({ error: 'No history yet', noData: true });
-  }
+app.get('/api/trends', async (req, res) => {
   try {
-    const history = JSON.parse(fs.readFileSync(HISTORY_PATH, 'utf8'));
-    const tickets = Object.values(history.tickets);
+    const tickets = await db.loadAllTickets();
 
     // Group tickets by agentId → date
     const agentDayMap = {};
@@ -324,34 +363,43 @@ cron.schedule('30 15 * * *', async () => {
   }
 });
 
+function istDateFromIso(iso) {
+  if (!iso) return null;
+  const d = new Date(new Date(iso).getTime() + IST_OFFSET_MS);
+  return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2,'0')}-${String(d.getUTCDate()).padStart(2,'0')}`;
+}
+
 async function startServer() {
   app.listen(PORT, '0.0.0.0', () => {
     console.log(`[server] Op Board running at http://localhost:${PORT}`);
     console.log(`[server] Static files served from: ${path.join(__dirname, '../public')}`);
   });
 
-  // Check if we need to fetch fresh data on startup
-  const existingData = readLeaderboard();
-  const todayIST = getTodayISTDateString();
+  // First boot: import any committed history.json if the DB is empty
+  try {
+    await db.migrateFromJsonIfEmpty();
+  } catch (err) {
+    console.error('[server] Migration check failed:', err.message);
+  }
 
-  if (!existingData) {
-    console.log('[server] No leaderboard data found. Fetching fresh data...');
-    try {
-      await fetchLeaderboardData();
-      console.log('[server] Initial fetch completed successfully');
-    } catch (err) {
-      console.error('[server] Initial fetch failed:', err.message);
-    }
-  } else if (existingData.date !== todayIST) {
-    console.log(`[server] Cached data is from ${existingData.date}, but today is ${todayIST}. Fetching fresh data...`);
-    try {
-      await fetchLeaderboardData();
-      console.log('[server] Startup refresh completed successfully');
-    } catch (err) {
-      console.error('[server] Startup refresh failed:', err.message);
-    }
+  // Fetch fresh data on startup if we haven't already fetched today
+  const todayIST = getTodayISTDateString();
+  let lastFetchedAt = null;
+  try {
+    lastFetchedAt = await db.getLatestFetchedAt();
+  } catch (err) {
+    console.error('[server] Could not check DB for last fetch:', err.message);
+  }
+  const lastFetchedDate = istDateFromIso(lastFetchedAt);
+
+  if (!lastFetchedAt) {
+    console.log('[server] No tickets in DB. Fetching fresh data...');
+    try { await fetchLeaderboardData(); } catch (err) { console.error('[server] Initial fetch failed:', err.message); }
+  } else if (lastFetchedDate !== todayIST) {
+    console.log(`[server] Last fetch was ${lastFetchedDate}, today is ${todayIST}. Fetching fresh data...`);
+    try { await fetchLeaderboardData(); } catch (err) { console.error('[server] Startup refresh failed:', err.message); }
   } else {
-    console.log(`[server] Using cached leaderboard data from ${existingData.date} (last updated: ${existingData.lastUpdated})`);
+    console.log(`[server] DB already has data from ${lastFetchedDate} (last fetched: ${lastFetchedAt})`);
   }
 }
 

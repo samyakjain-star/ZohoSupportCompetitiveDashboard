@@ -1,12 +1,9 @@
 const path = require('path');
-const fs = require('fs');
 const axios = require('axios');
 require('dotenv').config({ path: path.join(__dirname, '../.env') });
 const { getAccessToken, refreshAccessToken } = require('./tokenManager');
+const db = require('./db');
 
-const DATA_DIR = path.join(__dirname, '../data');
-const LEADERBOARD_PATH = path.join(DATA_DIR, 'leaderboard.json');
-const HISTORY_PATH = path.join(DATA_DIR, 'history.json');
 const BASE_URL = process.env.BASE_URL?.trim().replace(/^"|"$/g, '');
 const ORG_ID = process.env.ORG_ID?.trim().replace(/^"|"$/g, '');
 
@@ -160,47 +157,30 @@ function getISTRangeForDate(dateStr) {
 
 async function fetchDataForDate(dateStr) {
   console.log(`[fetchData] Fetching historical data for ${dateStr}...`);
-  fs.mkdirSync(DATA_DIR, { recursive: true });
 
   const { startUTC, endUTC } = getISTRangeForDate(dateStr);
   const token = await getAccessToken();
   const tickets = await fetchClosedTicketsForRange(token, startUTC, endUTC);
   console.log(`[fetchData] Found ${tickets.length} closed tickets for ${dateStr}`);
 
-  // Build a minimal operatives list so updateHistory has squad size info
-  const agentIds = new Set();
-  for (const t of tickets) {
-    if (t.assignee?.id) agentIds.add(String(t.assignee.id));
-  }
-  const operatives = [...agentIds].map(id => ({ id, missionsCompleted: 1 }));
-
-  const history   = loadHistory();
   const fetchedAt = new Date().toISOString();
-  const newTickets = updateHistory(history, tickets, operatives, dateStr, fetchedAt);
-  saveHistory(history);
-
+  const newTickets = await persistTickets(tickets, dateStr, fetchedAt);
   console.log(`[fetchData] Historical data for ${dateStr}: ${newTickets} new tickets added`);
   return { dateStr, ticketsFound: tickets.length, newTickets };
 }
 
-function loadHistory() {
-  if (fs.existsSync(HISTORY_PATH)) {
-    try {
-      const h = JSON.parse(fs.readFileSync(HISTORY_PATH, 'utf8'));
-      // Migrate: drop legacy agents block if present
-      delete h.agents;
-      return h;
-    } catch {}
-  }
-  return { tickets: {}, runs: [] };
-}
+// Upsert tickets into Supabase. Preserves the existing logic:
+//   - new ticket: insert with the current assignee
+//   - seen before: append new assignees to the list, update closedTime if it changed
+async function persistTickets(tickets, dateStr, fetchedAt) {
+  if (!tickets.length) return 0;
 
-function saveHistory(history) {
-  history.lastUpdated = new Date().toISOString();
-  fs.writeFileSync(HISTORY_PATH, JSON.stringify(history, null, 2));
-}
+  // Load existing tickets once into a map for fast lookup
+  const existing = await db.loadAllTickets();
+  const existingById = {};
+  for (const t of existing) existingById[t.id] = t;
 
-function updateHistory(history, tickets, operatives, dateStr, fetchedAt) {
+  const toUpsert = [];
   let newTickets = 0;
 
   for (const ticket of tickets) {
@@ -214,10 +194,11 @@ function updateHistory(history, tickets, operatives, dateStr, fetchedAt) {
       return (c && cl && cl > c) ? cl - c : null;
     })();
 
-    if (!history.tickets[ticket.id]) {
-      // New ticket — create full record
+    const stored = existingById[ticket.id];
+
+    if (!stored) {
       newTickets++;
-      history.tickets[ticket.id] = {
+      toUpsert.push({
         id:              ticket.id,
         ticketNumber:    ticket.ticketNumber || ticket.id,
         subject:         ticket.subject || 'Untitled',
@@ -226,55 +207,46 @@ function updateHistory(history, tickets, operatives, dateStr, fetchedAt) {
         resolutionTimeMs: resMs,
         dateClosed:      dateStr,
         firstFetchedAt:  fetchedAt,
-        // All assignees ever seen on this ticket, with timestamps
         assignees: assigneeId ? [{
-          id:        assigneeId,
-          name:      assigneeName,
-          seenAt:    fetchedAt,
-          role:      'closer',
+          id:     assigneeId,
+          name:   assigneeName,
+          seenAt: fetchedAt,
+          role:   'closer',
         }] : [],
-      };
-    } else {
-      // Ticket seen before — append assignee if new
-      const stored = history.tickets[ticket.id];
-      if (!Array.isArray(stored.assignees)) stored.assignees = []; // migrate old schema
-      if (assigneeId) {
-        const alreadySeen = stored.assignees.some(a => a.id === assigneeId);
-        if (!alreadySeen) {
-          stored.assignees.push({
-            id:     assigneeId,
-            name:   assigneeName,
-            seenAt: fetchedAt,
-            role:   'closer',
-          });
-        }
-      }
-      // Update closedTime/resMs if ticket was reopened and re-closed
-      if (ticket.closedTime && ticket.closedTime !== stored.closedTime) {
-        stored.closedTime      = ticket.closedTime;
-        stored.resolutionTimeMs = resMs;
-        stored.dateClosed      = dateStr;
-      }
+      });
+      continue;
+    }
+
+    // Existing ticket — figure out if anything changed
+    let assignees = Array.isArray(stored.assignees) ? [...stored.assignees] : [];
+    let needsUpdate = false;
+
+    if (assigneeId && !assignees.some(a => a.id === assigneeId)) {
+      assignees.push({ id: assigneeId, name: assigneeName, seenAt: fetchedAt, role: 'closer' });
+      needsUpdate = true;
+    }
+
+    let closedTime       = stored.closedTime;
+    let resolutionTimeMs = stored.resolutionTimeMs;
+    let dateClosed       = stored.dateClosed;
+    if (ticket.closedTime && ticket.closedTime !== stored.closedTime) {
+      closedTime       = ticket.closedTime;
+      resolutionTimeMs = resMs;
+      dateClosed       = dateStr;
+      needsUpdate = true;
+    }
+
+    if (needsUpdate) {
+      toUpsert.push({ ...stored, assignees, closedTime, resolutionTimeMs, dateClosed });
     }
   }
 
-  // Append run log (one entry per fetch, not per day — useful for debugging)
-  history.runs.push({
-    date:            dateStr,
-    fetchedAt:       fetchedAt,
-    totalTickets:    tickets.length,
-    newTicketsAdded: newTickets,
-    squadSize:       operatives.filter(o => o.missionsCompleted > 0).length,
-  });
-
+  await db.upsertTickets(toUpsert);
   return newTickets;
 }
 
 async function fetchLeaderboardData() {
   console.log('[fetchData] Starting leaderboard data fetch...');
-
-  // Ensure data directory exists
-  fs.mkdirSync(DATA_DIR, { recursive: true });
 
   const { startUTC, endUTC, dateStr } = getTodayISTRange();
   console.log(`[fetchData] Fetching data for IST date: ${dateStr}`);
@@ -391,18 +363,12 @@ async function fetchLeaderboardData() {
     operatives,
   };
 
-  fs.writeFileSync(LEADERBOARD_PATH, JSON.stringify(result, null, 2));
-  console.log(`[fetchData] Leaderboard saved to ${LEADERBOARD_PATH}`);
   console.log(`[fetchData] Total missions: ${totalMissions}, Squad size: ${squadSize}, Operatives: ${operatives.length}`);
 
-  // Persist history log
-  const history = loadHistory();
-  const fetchedAt = new Date().toISOString();
-  const newTickets = updateHistory(history, tickets, operatives, dateStr, fetchedAt);
-  saveHistory(history);
-  const totalHistoricTickets = Object.keys(history.tickets).length;
-  console.log(`[fetchData] History updated — ${newTickets} new tickets added (${totalHistoricTickets} total stored)`);
-  console.log(`[fetchData] History saved to ${HISTORY_PATH}`);
+  // Persist tickets to Supabase
+  const fetchedAt  = new Date().toISOString();
+  const newTickets = await persistTickets(tickets, dateStr, fetchedAt);
+  console.log(`[fetchData] Tickets persisted — ${newTickets} new added`);
 
   return result;
 }
