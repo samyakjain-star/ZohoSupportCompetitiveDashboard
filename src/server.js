@@ -129,6 +129,59 @@ async function computeCumulativeStats() {
   return stats;
 }
 
+// Team-wide resolution metrics: today's avg, yesterday's avg, % delta,
+// and the all-time cumulative avg (live tickets + agent_stats archive).
+async function computeTeamResolutionStats(todayStr) {
+  const tickets = await db.loadAllTickets();
+
+  const ymd = new Date(todayStr + 'T00:00:00Z').getTime();
+  const yest = new Date(ymd - 86400000);
+  const yesterdayStr = `${yest.getUTCFullYear()}-${String(yest.getUTCMonth() + 1).padStart(2, '0')}-${String(yest.getUTCDate()).padStart(2, '0')}`;
+
+  let todaySum = 0, todayCount = 0;
+  let yestSum  = 0, yestCount  = 0;
+  let liveSum  = 0, liveCount  = 0;
+
+  for (const t of tickets) {
+    if (!t.resolutionTimeMs) continue;
+    liveSum  += t.resolutionTimeMs;
+    liveCount++;
+    if (t.dateClosed === todayStr) {
+      todaySum  += t.resolutionTimeMs;
+      todayCount++;
+    } else if (t.dateClosed === yesterdayStr) {
+      yestSum  += t.resolutionTimeMs;
+      yestCount++;
+    }
+  }
+
+  // Roll in archived stats (tickets that have already been purged from `tickets`)
+  const archived = await db.getAgentStats();
+  let archSum = 0, archCount = 0;
+  for (const a of Object.values(archived)) {
+    archSum   += a.archivedTotalResolutionMs;
+    archCount += a.archivedResolutionCount;
+  }
+
+  const todayAvg = todayCount > 0 ? Math.round(todaySum / todayCount) : null;
+  const yestAvg  = yestCount  > 0 ? Math.round(yestSum  / yestCount)  : null;
+  const cumAvg   = (liveCount + archCount) > 0
+    ? Math.round((liveSum + archSum) / (liveCount + archCount))
+    : null;
+
+  let deltaPct = null;
+  if (todayAvg !== null && yestAvg !== null && yestAvg > 0) {
+    deltaPct = Math.round(((todayAvg - yestAvg) / yestAvg) * 1000) / 10;
+  }
+
+  return {
+    teamAvgResolutionTodayMs:     todayAvg,
+    teamAvgResolutionPrevDayMs:   yestAvg,
+    teamAvgResolutionDeltaPct:    deltaPct,
+    teamCumulativeAvgResolutionMs: cumAvg,
+  };
+}
+
 // GET /api/leaderboard
 app.get('/api/leaderboard', async (req, res) => {
   try {
@@ -208,7 +261,8 @@ app.get('/api/leaderboard', async (req, res) => {
     return { ...op, ...assignTierByRank(activeRank, activeCount) };
   });
 
-    res.json({ ...data, operatives: final });
+    const teamStats = await computeTeamResolutionStats(data.date);
+    res.json({ ...data, ...teamStats, operatives: final });
   } catch (err) {
     console.error('[server] /api/leaderboard error:', err.message);
     res.status(500).json({ error: 'Failed to build leaderboard: ' + err.message });

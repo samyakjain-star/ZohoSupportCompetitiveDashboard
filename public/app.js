@@ -10,6 +10,9 @@ const elLastUpdated   = document.getElementById('last-updated');
 const elTotalMissions = document.getElementById('total-missions');
 const elSquadSize     = document.getElementById('squad-size');
 const elSquadLeader   = document.getElementById('squad-leader-name');
+const elTeamAvgToday  = document.getElementById('team-avg-today');
+const elTeamAvgDelta  = document.getElementById('team-avg-delta');
+const elTeamAvgAllTime = document.getElementById('team-avg-alltime');
 const elRefreshBtn    = document.getElementById('refresh-btn');
 const elRetryBtn      = document.getElementById('retry-btn');
 const elDrawerOverlay = document.getElementById('drawer-overlay');
@@ -228,6 +231,22 @@ function renderBoard(data) {
 
   const leader = operatives[0];
   elSquadLeader.textContent = leader ? leader.name : '—';
+
+  // Team-wide resolution metrics
+  elTeamAvgToday.textContent   = formatDuration(data.teamAvgResolutionTodayMs);
+  elTeamAvgAllTime.textContent = formatDuration(data.teamCumulativeAvgResolutionMs);
+
+  const delta = data.teamAvgResolutionDeltaPct;
+  if (delta === null || delta === undefined) {
+    elTeamAvgDelta.innerHTML = '';
+  } else if (delta === 0) {
+    elTeamAvgDelta.innerHTML = '<span class="delta neutral">no change vs yesterday</span>';
+  } else {
+    // Negative delta = faster = good (down-good arrow). Positive = slower = bad.
+    const cls   = delta < 0 ? 'down-good' : 'up-bad';
+    const arrow = delta < 0 ? '↓' : '↑';
+    elTeamAvgDelta.innerHTML = `<span class="delta ${cls}">${arrow}${Math.abs(delta).toFixed(1)}% vs yesterday</span>`;
+  }
 
   elDayCounter.textContent  = data.dayNumber ? `Day ${data.dayNumber} · ${data.date || ''}` : 'Support Leaderboard';
   elLastUpdated.textContent = `Updated ${formatLastUpdated(data.lastUpdated)}`;
