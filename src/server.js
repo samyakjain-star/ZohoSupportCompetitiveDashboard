@@ -97,6 +97,7 @@ function assignTierByRank(rank, totalActive) {
 const INACTIVE_TIER = { tier: 'Inactive', tierColor: '#FF4C6A' };
 
 async function computeCumulativeStats() {
+  // Live tickets currently in the DB (within the 30-day retention window)
   const tickets = await db.loadAllTickets();
   const stats = {};
   for (const ticket of tickets) {
@@ -110,6 +111,17 @@ async function computeCumulativeStats() {
       stats[id].resCount++;
     }
   }
+
+  // Merge in archived stats from agent_stats (tickets older than retention window)
+  const archived = await db.getAgentStats();
+  for (const [id, a] of Object.entries(archived)) {
+    if (!stats[id]) stats[id] = { count: 0, name: a.name, totalResMs: 0, resCount: 0 };
+    stats[id].count       += a.archivedMissions;
+    stats[id].totalResMs  += a.archivedTotalResolutionMs;
+    stats[id].resCount    += a.archivedResolutionCount;
+    if (!stats[id].name) stats[id].name = a.name;
+  }
+
   for (const s of Object.values(stats)) {
     s.cumulativeMissions = s.count;
     s.cumulativeAvgResolutionMs = s.resCount > 0 ? Math.round(s.totalResMs / s.resCount) : null;
@@ -360,6 +372,19 @@ cron.schedule('30 15 * * *', async () => {
     console.log('[cron] Scheduled fetch completed successfully');
   } catch (err) {
     console.error('[cron] Scheduled fetch failed:', err.message);
+  }
+});
+
+// Daily archive at 11:00 PM UTC (4:30 AM IST): aggregate tickets older
+// than 30 days into agent_stats and delete them from the tickets table.
+// Cumulative counts and avg resolution time survive via agent_stats.
+cron.schedule('0 23 * * *', async () => {
+  console.log('[cron] Archive sweep triggered (retention = 30 days)');
+  try {
+    const r = await db.archiveOldTickets(30);
+    console.log(`[cron] Archive complete: cutoff=${r.cutoff}, ${r.archivedAgents} agents touched, ${r.deletedTickets} tickets deleted`);
+  } catch (err) {
+    console.error('[cron] Archive sweep failed:', err.message);
   }
 });
 

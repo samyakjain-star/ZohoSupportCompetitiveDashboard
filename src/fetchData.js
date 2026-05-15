@@ -169,6 +169,39 @@ async function fetchDataForDate(dateStr) {
   return { dateStr, ticketsFound: tickets.length, newTickets };
 }
 
+// Backfill a date range in one Zoho pagination. Tickets are bucketed into their
+// IST date_closed and upserted per-day. Returns per-day counts.
+async function fetchDataForRange(startDateStr, endDateStr) {
+  const { startUTC } = getISTRangeForDate(startDateStr);
+  const { endUTC }   = getISTRangeForDate(endDateStr);
+  console.log(`[fetchData] Range backfill ${startDateStr} → ${endDateStr}...`);
+
+  const token   = await getAccessToken();
+  const tickets = await fetchClosedTicketsForRange(token, startUTC, endUTC);
+  console.log(`[fetchData] Got ${tickets.length} tickets in range`);
+
+  // Bucket by IST date_closed
+  const byDate = {};
+  for (const t of tickets) {
+    if (!t.closedTime) continue;
+    const ist = new Date(new Date(t.closedTime).getTime() + IST_OFFSET_MS);
+    const d = `${ist.getUTCFullYear()}-${String(ist.getUTCMonth() + 1).padStart(2, '0')}-${String(ist.getUTCDate()).padStart(2, '0')}`;
+    if (!byDate[d]) byDate[d] = [];
+    byDate[d].push(t);
+  }
+
+  const fetchedAt = new Date().toISOString();
+  const perDay = {};
+  let totalNew = 0;
+  for (const [dateStr, dayTickets] of Object.entries(byDate).sort()) {
+    const n = await persistTickets(dayTickets, dateStr, fetchedAt);
+    perDay[dateStr] = { found: dayTickets.length, new: n };
+    totalNew += n;
+    console.log(`  ${dateStr}: ${n}/${dayTickets.length} new`);
+  }
+  return { startDateStr, endDateStr, totalFetched: tickets.length, totalNew, perDay };
+}
+
 // Upsert tickets into Supabase. Preserves the existing logic:
 //   - new ticket: insert with the current assignee
 //   - seen before: append new assignees to the list, update closedTime if it changed
@@ -390,4 +423,4 @@ if (require.main === module) {
     });
 }
 
-module.exports = { fetchLeaderboardData, fetchDataForDate };
+module.exports = { fetchLeaderboardData, fetchDataForDate, fetchDataForRange };

@@ -129,6 +129,77 @@ async function migrateFromJsonIfEmpty() {
   }
 }
 
+// ── agent_stats (archive of expired tickets) ────────────────────────────────
+// When raw tickets are deleted after N days, their contribution to cumulative
+// counts and average resolution time is preserved here.
+
+async function getAgentStats() {
+  const { rows } = await pool.query('SELECT * FROM agent_stats');
+  const map = {};
+  for (const r of rows) {
+    map[r.agent_id] = {
+      name:                      r.name,
+      archivedMissions:          Number(r.archived_missions) || 0,
+      archivedTotalResolutionMs: Number(r.archived_total_resolution_ms) || 0,
+      archivedResolutionCount:   Number(r.archived_resolution_count) || 0,
+    };
+  }
+  return map;
+}
+
+// Aggregate tickets older than (today - daysToKeep) into agent_stats and
+// delete them from the tickets table. Returns { archivedAgents, deletedTickets }.
+async function archiveOldTickets(daysToKeep = 30) {
+  const cutoff = new Date(Date.now() - daysToKeep * 86400000);
+  const cutoffStr =
+    `${cutoff.getUTCFullYear()}-${String(cutoff.getUTCMonth() + 1).padStart(2, '0')}-${String(cutoff.getUTCDate()).padStart(2, '0')}`;
+
+  const client = await pool.connect();
+  try {
+    await client.query('BEGIN');
+
+    const { rows } = await client.query(
+      `SELECT
+         assignees->0->>'id'                                          AS agent_id,
+         assignees->0->>'name'                                        AS name,
+         COUNT(*)::int                                                AS missions,
+         COALESCE(SUM(resolution_time_ms), 0)::bigint                 AS total_res_ms,
+         COUNT(resolution_time_ms)::int                               AS res_count
+       FROM tickets
+       WHERE date_closed < $1
+         AND jsonb_array_length(assignees) > 0
+       GROUP BY assignees->0->>'id', assignees->0->>'name'`,
+      [cutoffStr]
+    );
+
+    for (const r of rows) {
+      if (!r.agent_id) continue;
+      await client.query(
+        `INSERT INTO agent_stats
+           (agent_id, name, archived_missions, archived_total_resolution_ms, archived_resolution_count, last_updated)
+         VALUES ($1, $2, $3, $4, $5, NOW())
+         ON CONFLICT (agent_id) DO UPDATE SET
+           name                         = COALESCE(EXCLUDED.name, agent_stats.name),
+           archived_missions            = agent_stats.archived_missions            + EXCLUDED.archived_missions,
+           archived_total_resolution_ms = agent_stats.archived_total_resolution_ms + EXCLUDED.archived_total_resolution_ms,
+           archived_resolution_count    = agent_stats.archived_resolution_count    + EXCLUDED.archived_resolution_count,
+           last_updated                 = NOW()`,
+        [r.agent_id, r.name, r.missions, r.total_res_ms, r.res_count]
+      );
+    }
+
+    const del = await client.query('DELETE FROM tickets WHERE date_closed < $1', [cutoffStr]);
+
+    await client.query('COMMIT');
+    return { archivedAgents: rows.length, deletedTickets: del.rowCount || 0, cutoff: cutoffStr };
+  } catch (err) {
+    await client.query('ROLLBACK');
+    throw err;
+  } finally {
+    client.release();
+  }
+}
+
 module.exports = {
   pool,
   loadAllTickets,
@@ -138,4 +209,6 @@ module.exports = {
   upsertTickets,
   getLatestFetchedAt,
   migrateFromJsonIfEmpty,
+  getAgentStats,
+  archiveOldTickets,
 };
