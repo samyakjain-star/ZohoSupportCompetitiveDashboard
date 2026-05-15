@@ -35,14 +35,19 @@ function readLeaderboard() {
 // Serve static files from public/
 app.use(express.static(path.join(__dirname, '../public')));
 
-function assignTierFromScore(score) {
-  if (!score || score <= 0) return { tier: 'Inactive',       tierColor: '#FF4C6A' };
-  if (score >= 150)         return { tier: 'Elite',          tierColor: '#E8B84B' };
-  if (score >= 120)         return { tier: 'High Performer', tierColor: '#4ADE80' };
-  if (score >= 100)         return { tier: 'Proficient',     tierColor: '#00C9FF' };
-  if (score >= 80)          return { tier: 'Developing',     tierColor: '#9CA8B5' };
-  return                         { tier: 'Beginner',        tierColor: '#A78BFA' };
+// Assign tier by percentile rank (1-indexed) among active agents.
+// Top 15% = Elite, next 20% = High Performer, next 30% = Proficient,
+// next 20% = Developing, bottom 15% = Beginner. Score-0 agents = Inactive.
+function assignTierByRank(rank, totalActive) {
+  const pct = rank / totalActive;
+  if (pct <= 0.15) return { tier: 'Elite',          tierColor: '#E8B84B' };
+  if (pct <= 0.35) return { tier: 'High Performer', tierColor: '#4ADE80' };
+  if (pct <= 0.65) return { tier: 'Proficient',     tierColor: '#00C9FF' };
+  if (pct <= 0.85) return { tier: 'Developing',     tierColor: '#9CA8B5' };
+  return                { tier: 'Beginner',        tierColor: '#A78BFA' };
 }
+
+const INACTIVE_TIER = { tier: 'Inactive', tierColor: '#FF4C6A' };
 
 function computeCumulativeStats() {
   if (!fs.existsSync(HISTORY_PATH)) return {};
@@ -102,15 +107,15 @@ app.get('/api/leaderboard', (req, res) => {
     }
   }
 
-  // Compute performance score then assign tier from score
+  // Compute performance score (tier assigned later by rank)
   const scored = operatives.map(op => {
     const others = operatives.filter(o => o.id !== op.id && o.cumulativeMissions > 0);
 
     if (op.cumulativeMissions === 0) {
-      return { ...op, ticketScore: 0, resolutionScore: null, performanceScore: 0, ...assignTierFromScore(0) };
+      return { ...op, ticketScore: 0, resolutionScore: null, performanceScore: 0 };
     }
     if (others.length === 0) {
-      return { ...op, ticketScore: 100, resolutionScore: null, performanceScore: 100, ...assignTierFromScore(100) };
+      return { ...op, ticketScore: 100, resolutionScore: null, performanceScore: 100 };
     }
 
     const avgOthersTickets = others.reduce((s, o) => s + o.cumulativeMissions, 0) / others.length;
@@ -129,7 +134,7 @@ app.get('/api/leaderboard', (req, res) => {
       ? Math.round((0.6 * ticketScore + 0.4 * resolutionScore) * 10) / 10
       : Math.round(ticketScore * 10) / 10;
 
-    return { ...op, ticketScore, resolutionScore, performanceScore, ...assignTierFromScore(performanceScore) };
+    return { ...op, ticketScore, resolutionScore, performanceScore };
   });
 
   // Sort by performanceScore desc, tie-break: cumulativeMissions desc
@@ -138,7 +143,16 @@ app.get('/api/leaderboard', (req, res) => {
     return b.cumulativeMissions - a.cumulativeMissions;
   });
 
-  res.json({ ...data, operatives: scored });
+  // Assign tier by rank among active agents (Inactive for score <= 0)
+  const activeCount = scored.filter(o => o.performanceScore > 0).length;
+  let activeRank = 0;
+  const final = scored.map(op => {
+    if (op.performanceScore <= 0) return { ...op, ...INACTIVE_TIER };
+    activeRank++;
+    return { ...op, ...assignTierByRank(activeRank, activeCount) };
+  });
+
+  res.json({ ...data, operatives: final });
 });
 
 // GET /api/history
